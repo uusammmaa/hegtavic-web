@@ -89,9 +89,9 @@ Brand assets are fixed and are not redesigned here: the registered mark, the `EM
 
 | Role | Token | Contrast |
 |---|---|---|
-| Brand green on graphite | `--brand-green` | 9.03:1 ✅ |
-| Graphite text on brand green (CTA) | `--brand-ground` | 9.03:1 ✅ |
-| Green text on white | `--green-ink` `#3F7529` | 5.54:1 ✅ |
+| Brand green on graphite | `--color-brand-green` | 7.65:1 ✅ AAA |
+| Graphite text on brand green (CTA) | `--color-graphite` | 7.65:1 ✅ AAA |
+| Green text on white | `--color-green-ink` `#3F7529` | 5.54:1 ✅ AA |
 | ~~Brand green as text on white~~ | — | 2.33:1 ❌ never used |
 
 Every colour pairing in `tokens.css` is annotated with its measured ratio, and a unit test asserts the contrast of each documented pair so a future palette edit cannot silently break AA.
