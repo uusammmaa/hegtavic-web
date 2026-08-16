@@ -1,0 +1,97 @@
+/* ============================================================
+   Typographic base
+
+   Geist Sans for display and body, Geist Mono for technical
+   labelling. The mono is the engineering signal in the system —
+   it carries stack names, metric labels and process numbering,
+   and it is what separates this from an agency template.
+   ============================================================ */
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: 1.65;
+  font-synthesis-weight: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Headings inherit weight and tracking from the type scale
+   utilities rather than carrying their own defaults. */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 600;
+  letter-spacing: -0.022em;
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* ── Focus ──────────────────────────────────────────────────
+   A single visible focus treatment, never removed. Brand green
+   clears the 3:1 non-text threshold on both grounds. */
+:focus-visible {
+  outline: 2px solid var(--color-brand-green);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+::selection {
+  background-color: var(--color-brand-green);
+  color: var(--color-graphite);
+}
+
+/* ── Motion ─────────────────────────────────────────────────
+   Entrance transitions only. Anyone who has asked their system
+   to reduce motion gets none of it. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── Utilities ──────────────────────────────────────────── */
+
+/* Mono eyebrow — small, tracked-out, uppercase. */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-eyebrow);
+  line-height: var(--text-eyebrow--line-height);
+  letter-spacing: var(--text-eyebrow--letter-spacing);
+  font-weight: var(--text-eyebrow--font-weight);
+  text-transform: uppercase;
+}
+
+/* Constrain body copy to a comfortable measure. */
+.measure {
+  max-width: 68ch;
+}
+
+.measure-tight {
+  max-width: 54ch;
+}
+
+/* Fine grid, used at very low opacity as a section ground.
+   Authored here rather than shipped as an image asset. */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, var(--ground-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--ground-line) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
