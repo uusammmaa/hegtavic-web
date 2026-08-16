@@ -1,0 +1,65 @@
+# dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# next.js
+.next/
+out/
+build/
+dist/
+
+# production / payload
+.payload/
+media/
+
+# env
+.env
+.env*.local
+.env.production
+
+# testing
+coverage/
+.nyc_output/
+playwright-report/
+test-results/
+
+# vercel / turbo
+.vercel
+.turbo
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# os / editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ─────────────────────────────────────────────────────────────
+# NEVER COMMIT — internal planning, client-confidential material
+# and placeholder content. These live outside this repo; the
+# patterns below are a backstop against an accidental copy in.
+# ─────────────────────────────────────────────────────────────
+PLAN.md
+IMPLEMENTATION-PLAN.md
+QUESTIONS-FOR-OWNER.md
+CONTENT-SPECIMEN.md
+MEDIA-BRIEF.md
+spam-urls.txt
+*.pdf
+/docs/internal/
+**/specimen/
+*-SPECIMEN.md
+*-specimen.json
