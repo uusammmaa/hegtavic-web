@@ -1,0 +1,166 @@
+/* ============================================================
+   Hegtavic — brand tokens
+   Single source of truth for colour, type and space.
+
+   The palette is a registered brand asset and is not open to
+   redesign: brand green, graphite ground, and the EMBRACE
+   TECHNOLOGY lock-up.
+
+   ⚠️  CONTRAST RULE — read before using --color-brand-green
+   Brand green (#6CBD4D) measures 2.33:1 against white, well
+   below the WCAG 2.2 AA threshold of 4.5:1. It is a SURFACE
+   and ACCENT colour only.
+
+     ✅  brand green on graphite ............ 7.65:1  (AAA)
+     ✅  graphite text on brand green ....... 7.65:1   ← the CTA
+     ✅  --color-green-ink on white ......... 5.54:1
+     ❌  brand green as text on white ....... 2.33:1   NEVER
+     ❌  white text on brand green .......... 2.33:1   NEVER
+
+   Every pair above is asserted in lib/theme/contrast.test.ts.
+   Changing a value here without updating that test fails CI.
+   ============================================================ */
+
+@theme {
+  /* ── Brand (registered — do not alter) ──────────────────── */
+  --color-brand-green: #6cbd4d;
+  --color-graphite: #16181a;
+
+  /* ── Derived brand ──────────────────────────────────────── */
+  /* Darkened brand green, the only green permitted as text on
+     a light ground. 5.54:1 on white. */
+  --color-green-ink: #3f7529;
+  /* Lifted brand green for large decorative fills on graphite. */
+  --color-green-bright: #7fd15e;
+  /* Deep green for graphite-adjacent surfaces. */
+  --color-green-deep: #24421a;
+
+  /* ── Neutrals ───────────────────────────────────────────── */
+  --color-surface: #ffffff;
+  --color-surface-sunken: #f4f6f5;
+  --color-surface-raised: #ffffff;
+  --color-ink: #14181a; /* 17.87:1 on white */
+  --color-ink-muted: #5a6469; /*  6.07:1 on white */
+  --color-ink-faint: #8b9499; /* decorative only  */
+  --color-line: #e2e7e5;
+  --color-line-strong: #cbd3d0;
+
+  /* Neutrals used inside a graphite ground */
+  --color-graphite-raised: #1e2225;
+  --color-graphite-sunken: #101214;
+  --color-ink-inverse: #f7f9f8; /* 16.84:1 on graphite */
+  --color-ink-inverse-muted: #a8b2b5; /*  8.22:1 on graphite */
+  --color-line-inverse: #2c3134;
+
+  /* ── Type ───────────────────────────────────────────────── */
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, 'SF Mono', monospace;
+
+  --text-display-xl: clamp(3rem, 7.5vw, 5.75rem);
+  --text-display-xl--line-height: 0.96;
+  --text-display-xl--letter-spacing: -0.035em;
+  --text-display-xl--font-weight: 600;
+
+  --text-display: clamp(2.25rem, 4.5vw, 3.5rem);
+  --text-display--line-height: 1.04;
+  --text-display--letter-spacing: -0.03em;
+  --text-display--font-weight: 600;
+
+  --text-heading: clamp(1.625rem, 2.6vw, 2.25rem);
+  --text-heading--line-height: 1.14;
+  --text-heading--letter-spacing: -0.022em;
+  --text-heading--font-weight: 600;
+
+  --text-subheading: 1.25rem;
+  --text-subheading--line-height: 1.35;
+  --text-subheading--letter-spacing: -0.012em;
+  --text-subheading--font-weight: 500;
+
+  --text-lede: clamp(1.0625rem, 1.5vw, 1.3125rem);
+  --text-lede--line-height: 1.55;
+  --text-lede--letter-spacing: -0.008em;
+
+  --text-body: 1.0625rem;
+  --text-body--line-height: 1.65;
+
+  --text-small: 0.9375rem;
+  --text-small--line-height: 1.55;
+
+  /* Mono eyebrow — the engineering signal in the type system */
+  --text-eyebrow: 0.75rem;
+  --text-eyebrow--line-height: 1.2;
+  --text-eyebrow--letter-spacing: 0.14em;
+  --text-eyebrow--font-weight: 500;
+
+  /* ── Space (8px grid) ───────────────────────────────────── */
+  --spacing-section: clamp(5rem, 10vw, 10rem);
+  --spacing-section-tight: clamp(3.5rem, 6vw, 6rem);
+
+  /* ── Radius ─────────────────────────────────────────────── */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 14px;
+
+  /* ── Motion ─────────────────────────────────────────────── */
+  /* Entrance transitions only, nothing over 250ms.
+     No parallax, no scroll-jacking, no animated counters. */
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --duration-fast: 140ms;
+  --duration-base: 220ms;
+}
+
+/* ============================================================
+   Semantic ground layer
+
+   Sections declare their ground; the semantic tokens flip so a
+   component never needs to know which ground it sits on. This
+   is what keeps the contrast rule above enforceable — a
+   component uses --ground-ink, never a raw brand colour.
+   ============================================================ */
+
+:root,
+[data-ground='light'] {
+  --ground: var(--color-surface);
+  --ground-sunken: var(--color-surface-sunken);
+  --ground-raised: var(--color-surface-raised);
+  --ground-ink: var(--color-ink);
+  --ground-ink-muted: var(--color-ink-muted);
+  --ground-ink-faint: var(--color-ink-faint);
+  --ground-line: var(--color-line);
+  --ground-line-strong: var(--color-line-strong);
+  /* Green that is safe as TEXT on this ground */
+  --ground-accent-ink: var(--color-green-ink);
+}
+
+/* Same ink as light, one step down in surface. Declared as its own
+   ground rather than a background utility so it survives the
+   [data-ground] background rule below. */
+[data-ground='sunken'] {
+  --ground: var(--color-surface-sunken);
+  --ground-sunken: #eceeed;
+  --ground-raised: var(--color-surface);
+  --ground-ink: var(--color-ink);
+  --ground-ink-muted: var(--color-ink-muted);
+  --ground-ink-faint: var(--color-ink-faint);
+  --ground-line: var(--color-line);
+  --ground-line-strong: var(--color-line-strong);
+  --ground-accent-ink: var(--color-green-ink);
+}
+
+[data-ground='dark'] {
+  --ground: var(--color-graphite);
+  --ground-sunken: var(--color-graphite-sunken);
+  --ground-raised: var(--color-graphite-raised);
+  --ground-ink: var(--color-ink-inverse);
+  --ground-ink-muted: var(--color-ink-inverse-muted);
+  --ground-ink-faint: #6f797d;
+  --ground-line: var(--color-line-inverse);
+  --ground-line-strong: #3a4043;
+  /* On graphite the full-strength brand green is AA-safe (9.03:1) */
+  --ground-accent-ink: var(--color-brand-green);
+}
+
+[data-ground] {
+  background-color: var(--ground);
+  color: var(--ground-ink);
+}

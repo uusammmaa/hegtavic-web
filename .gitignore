@@ -48,18 +48,16 @@ yarn-error.log*
 pnpm-debug.log*
 
 # ─────────────────────────────────────────────────────────────
-# NEVER COMMIT — internal planning, client-confidential material
-# and placeholder content. These live outside this repo; the
-# patterns below are a backstop against an accidental copy in.
+# Internal working material and placeholder content.
+#
+# The primary control is physical: this repo's root is the app
+# directory, and internal documents live above it, outside the
+# git working tree, where they cannot be staged by accident.
+# The patterns below are only a backstop for a stray copy.
 # ─────────────────────────────────────────────────────────────
-PLAN.md
-IMPLEMENTATION-PLAN.md
-QUESTIONS-FOR-OWNER.md
-CONTENT-SPECIMEN.md
-MEDIA-BRIEF.md
-spam-urls.txt
-*.pdf
+/internal/
 /docs/internal/
+*.pdf
 **/specimen/
-*-SPECIMEN.md
-*-specimen.json
+*.specimen.*
+*-specimen.*
