@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Types, lint, tests, build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      # `pnpm typecheck` runs `next typegen` first. next-env.d.ts and
+      # .next/types are gitignored, so on a clean checkout they do not
+      # exist yet and tsc would fail to resolve image imports and typed
+      # routes. Do not split typegen out of this step.
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Lint
+        run: pnpm lint
+
+      # Asserts every documented colour pairing in styles/tokens.css.
+      # A palette edit that breaks WCAG AA fails here, not in review.
+      - name: Contrast and unit tests
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
+
+  # ── Phase 3 ──────────────────────────────────────────────────
+  # content-integrity: fails the build if any document with
+  # status "specimen" is publishable. Added with the CMS; it is a
+  # required check on main before launch.
