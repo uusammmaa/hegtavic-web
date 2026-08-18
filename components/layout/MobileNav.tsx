@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/primitives/Button';
-import { capabilities, CTA_HREF, CTA_LABEL, primaryNav } from '@/lib/navigation';
+import { capabilities, CTA_HREF, CTA_LABEL, expertiseIndex, primaryNav } from '@/lib/navigation';
 
 export function MobileNav() {
   const [open, setOpen] = useState(false);
@@ -85,6 +85,15 @@ export function MobileNav() {
                   </Link>
                 </li>
               ))}
+              <li>
+                <Link
+                  href={expertiseIndex.href}
+                  onClick={() => setOpen(false)}
+                  className="block py-2.5 text-[1.0625rem] font-medium text-[var(--ground-accent-ink)]"
+                >
+                  {expertiseIndex.label}
+                </Link>
+              </li>
             </ul>
 
             <hr className="my-7 border-[var(--ground-line)]" />
