@@ -6,7 +6,7 @@ import { Button } from '@/components/primitives/Button';
 import { Container } from '@/components/primitives/Container';
 import { Logo } from '@/components/layout/Logo';
 import { MobileNav } from '@/components/layout/MobileNav';
-import { capabilities, CTA_HREF, CTA_LABEL, primaryNav } from '@/lib/navigation';
+import { capabilities, CTA_HREF, CTA_LABEL, expertiseIndex, primaryNav } from '@/lib/navigation';
 import { cn } from '@/lib/utils/cn';
 
 export function Header() {
@@ -101,6 +101,23 @@ export function Header() {
                         </li>
                       ))}
                     </ul>
+
+                    <Link
+                      href={expertiseIndex.href}
+                      onClick={() => setMenuOpen(false)}
+                      className="mt-1 flex items-center gap-2 rounded-md border-t border-[var(--ground-line)] p-3 pt-4 text-[0.875rem] font-medium text-[var(--ground-accent-ink)] hover:bg-[var(--ground-sunken)]"
+                    >
+                      {expertiseIndex.label}
+                      <svg width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+                        <path
+                          d="M8.5 1L12.5 5L8.5 9M12 5H1"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </Link>
                   </div>
                 </div>
               </li>

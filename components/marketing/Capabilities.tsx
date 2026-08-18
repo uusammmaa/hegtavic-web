@@ -3,7 +3,7 @@ import { Button } from '@/components/primitives/Button';
 import { Container } from '@/components/primitives/Container';
 import { Eyebrow } from '@/components/primitives/Eyebrow';
 import { Section } from '@/components/primitives/Section';
-import { capabilities } from '@/lib/navigation';
+import { headlineCapabilities } from '@/lib/content/capabilities';
 
 /**
  * Homepage section 04 — "Our Technology Expertise".
@@ -15,20 +15,6 @@ import { capabilities } from '@/lib/navigation';
  * capability rather than the value proposition itself.
  */
 
-const summaries: Record<string, string> = {
-  '/expertise/ai-machine-learning':
-    'Turn data into intelligence with machine learning, deep learning, NLP, computer vision and predictive analytics.',
-  '/expertise/generative-ai':
-    'Build intelligent applications with LLMs, RAG, AI assistants, agents, document intelligence and workflow automation.',
-  '/expertise/software-product-engineering':
-    'Scalable digital products, web applications, SaaS platforms, APIs and custom software built around your requirements.',
-  '/expertise/data-engineering':
-    'Reliable data foundations, pipelines, analytics and dashboards that help businesses make better decisions.',
-  '/expertise/cloud-modernization':
-    'Modernize existing applications and infrastructure to improve scalability, reliability and maintainability.',
-  '/expertise/dedicated-teams':
-    'Extend your capacity with AI/ML, software, backend, frontend and data engineers working as part of your team.',
-};
 
 export function Capabilities() {
   return (
@@ -51,10 +37,10 @@ export function Capabilities() {
         </div>
 
         <ul className="mt-14 grid gap-px overflow-hidden rounded-lg border border-[var(--ground-line)] bg-[var(--ground-line)] sm:grid-cols-2 lg:grid-cols-3">
-          {capabilities.map((capability, i) => (
-            <li key={capability.href} className="bg-[var(--ground-raised)]">
+          {headlineCapabilities.map((capability, i) => (
+            <li key={capability.slug} className="bg-[var(--ground-raised)]">
               <Link
-                href={capability.href}
+                href={`/expertise/${capability.slug}`}
                 className="group flex h-full flex-col p-8 transition-colors duration-[var(--duration-base)] ease-[var(--ease-out-quart)] hover:bg-[var(--ground-sunken)]"
               >
                 <span className="font-mono text-[0.75rem] tracking-[0.14em] text-[var(--ground-ink-faint)]">
@@ -62,11 +48,11 @@ export function Capabilities() {
                 </span>
 
                 <h3 className="mt-6 text-subheading text-[var(--ground-ink)]">
-                  {capability.label}
+                  {capability.title}
                 </h3>
 
                 <p className="mt-3 flex-1 text-[0.9375rem] leading-relaxed text-[var(--ground-ink-muted)]">
-                  {summaries[capability.href]}
+                  {capability.summary}
                 </p>
 
                 <span
