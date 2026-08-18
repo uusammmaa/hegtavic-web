@@ -57,7 +57,7 @@ export function Hero() {
 
           <div className="relative">
             <div className="rounded-lg border border-[var(--ground-line)] bg-[var(--ground-raised)]/60 p-6 backdrop-blur-sm sm:p-8">
-              <SystemDiagram className="h-auto w-full" />
+              <SystemDiagram id="hero-diagram" className="h-auto w-full" />
             </div>
           </div>
         </div>
