@@ -17,7 +17,18 @@
      ❌  brand green as text on white ....... 2.33:1   NEVER
      ❌  white text on brand green .......... 2.33:1   NEVER
 
-   Every pair above is asserted in lib/theme/contrast.test.ts.
+   ⚠️  THE 'FAINT' TIER IS TEXT, NOT DECORATION
+   The faint inks were once labelled "decorative only" and were
+   therefore left out of the contrast test. They were then used
+   for real content — stack chips, step numbers, footer headings
+   — and shipped at 2.85–3.99:1, failing AA on all 13 pages.
+   They are now full AA text colours and are tested as such.
+   If you need something genuinely decorative, use a LINE token;
+   do not reintroduce a sub-AA ink.
+
+   lib/theme/contrast.test.ts asserts EVERY ink tier against
+   EVERY ground as an exhaustive matrix — not a hand-picked
+   list — so a new token cannot be added without a verdict.
    Changing a value here without updating that test fails CI.
    ============================================================ */
 
@@ -41,7 +52,7 @@
   --color-surface-raised: #ffffff;
   --color-ink: #14181a; /* 17.87:1 on white */
   --color-ink-muted: #5a6469; /*  6.07:1 on white */
-  --color-ink-faint: #8b9499; /* decorative only  */
+  --color-ink-faint: #646a6e; /*  5.48:1 on white, 5.05:1 on sunken */
   --color-line: #e2e7e5;
   --color-line-strong: #cbd3d0;
 
@@ -50,6 +61,7 @@
   --color-graphite-sunken: #101214;
   --color-ink-inverse: #f7f9f8; /* 16.84:1 on graphite */
   --color-ink-inverse-muted: #a8b2b5; /*  8.22:1 on graphite */
+  --color-ink-inverse-faint: #7f8a8f; /*  5.03:1 on graphite */
   --color-line-inverse: #2c3134;
 
   /* ── Type ───────────────────────────────────────────────── */
@@ -153,10 +165,10 @@
   --ground-raised: var(--color-graphite-raised);
   --ground-ink: var(--color-ink-inverse);
   --ground-ink-muted: var(--color-ink-inverse-muted);
-  --ground-ink-faint: #6f797d;
+  --ground-ink-faint: var(--color-ink-inverse-faint);
   --ground-line: var(--color-line-inverse);
   --ground-line-strong: #3a4043;
-  /* On graphite the full-strength brand green is AA-safe (9.03:1) */
+  /* On graphite the full-strength brand green is AA-safe (7.65:1) */
   --ground-accent-ink: var(--color-brand-green);
 }
 

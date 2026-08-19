@@ -85,6 +85,59 @@ export const palette = {
   surfaceSunken: '#F4F6F5',
   ink: '#14181A',
   inkMuted: '#5A6469',
+  inkFaint: '#646A6E',
   inkInverse: '#F7F9F8',
   inkInverseMuted: '#A8B2B5',
+  inkInverseFaint: '#7F8A8F',
+} as const;
+
+/**
+ * The grounds a section can declare, and every ink that resolves on
+ * each one.
+ *
+ * ⚠️  This exists because of a real defect. The contrast test used to
+ * assert a hand-written list of pairings, so any pairing nobody
+ * thought to list was silently unverified. The `faint` inks were
+ * described as "decorative only", left out of that list, then used
+ * for stack chips, step numbers and footer headings — and shipped at
+ * 2.85–3.99:1, failing WCAG AA on all 13 pages.
+ *
+ * The test now walks this structure exhaustively. Adding a ground or
+ * an ink without a passing ratio fails CI, which is the property the
+ * old hand-written list did not have.
+ *
+ * Every ink listed here is used for TEXT and must clear AA_NORMAL.
+ * Purely decorative values belong in the line tokens, not here.
+ */
+export const grounds = {
+  light: {
+    token: "[data-ground='light']",
+    background: palette.surface,
+    inks: {
+      'ground-ink': palette.ink,
+      'ground-ink-muted': palette.inkMuted,
+      'ground-ink-faint': palette.inkFaint,
+      'ground-accent-ink': palette.greenInk,
+    },
+  },
+  sunken: {
+    token: "[data-ground='sunken']",
+    background: palette.surfaceSunken,
+    inks: {
+      'ground-ink': palette.ink,
+      'ground-ink-muted': palette.inkMuted,
+      'ground-ink-faint': palette.inkFaint,
+      'ground-accent-ink': palette.greenInk,
+    },
+  },
+  dark: {
+    token: "[data-ground='dark']",
+    background: palette.graphite,
+    inks: {
+      'ground-ink': palette.inkInverse,
+      'ground-ink-muted': palette.inkInverseMuted,
+      'ground-ink-faint': palette.inkInverseFaint,
+      'ground-accent-ink': palette.brandGreen,
+    },
+  },
 } as const;
