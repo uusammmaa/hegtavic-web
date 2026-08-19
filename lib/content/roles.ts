@@ -21,8 +21,6 @@ export type Role = {
   title: string;
   location: string;
   type: string;
-  /** One line for the listing card. */
-  summary: string;
   intro: readonly string[];
   responsibilities: readonly string[];
   requirements: readonly string[];
@@ -39,8 +37,6 @@ export const roles: readonly Role[] = [
     title: 'Full-Stack Engineering Intern',
     location: 'Lahore, Pakistan · On-site',
     type: 'Internship',
-    summary:
-      'Work on real client software with senior engineers, on a small team where your code reaches production rather than a sandbox.',
     intro: [
       'We are a small engineering team. That is the whole pitch: there is no bench, no shadow project and no six-month onboarding programme. You will work on software that clients actually use, reviewed by people who have shipped and maintained it.',
       'We are looking for someone early in their career who is genuinely curious about how systems behave in production — not just how to make them run once.',
@@ -75,7 +71,3 @@ export const roles: readonly Role[] = [
       'Send your CV and a short note about something you have built. Tell us what you would change about it now. We read every application and reply either way.',
   },
 ];
-
-export function getRole(slug: string): Role | undefined {
-  return roles.find((role) => role.slug === slug);
-}

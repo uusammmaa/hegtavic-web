@@ -30,7 +30,14 @@ export function OrganizationSchema() {
     name: 'Hegtavic Tech Co (Pvt) Ltd',
     alternateName: 'Hegtavic',
     url: siteUrl,
-    logo: `${siteUrl}/og-default.png`,
+    /**
+     * ⚠️  Must be the square mark, NOT the 1200x630 social banner.
+     * Google uses Organization.logo for knowledge-panel and rich
+     * results and crops toward square, so a wide banner renders badly
+     * or is rejected outright. og-default.png belongs in
+     * openGraph.images and nowhere else.
+     */
+    logo: `${siteUrl}/icon.png`,
     description:
       'AI and software engineering company building intelligent systems, custom software and data platforms for international clients.',
     foundingDate: '2019',

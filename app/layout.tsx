@@ -18,7 +18,9 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     siteName: 'Hegtavic',
-    locale: 'en',
+    // Open Graph requires language_TERRITORY. A bare 'en' is invalid
+    // and validating scrapers drop the tag rather than use it.
+    locale: 'en_US',
     title: 'Hegtavic — Technology & AI Engineering Partner',
     description:
       'AI and software engineering solutions built around your business. Build Smarter. Scale Faster.',

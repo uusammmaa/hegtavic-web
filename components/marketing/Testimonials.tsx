@@ -40,7 +40,13 @@ export function Testimonials() {
 
         <ul className="mt-12 grid gap-px overflow-hidden rounded-lg border border-[var(--ground-line)] bg-[var(--ground-line)] lg:grid-cols-2">
           {testimonials.map((t) => (
-            <li key={t.client} className="bg-[var(--ground-raised)] p-8">
+            <li
+              key={t.client}
+              // An odd final card would leave an empty grid cell showing the
+              // list background, which is the divider colour — a solid
+              // block of line colour. Span it instead.
+              className="bg-[var(--ground-raised)] p-8 lg:last:odd:col-span-2"
+            >
               <figure className="flex h-full flex-col">
                 <blockquote className="text-[1.0625rem] leading-relaxed text-[var(--ground-ink)]">
                   &ldquo;{t.quote}&rdquo;
@@ -52,7 +58,7 @@ export function Testimonials() {
                   </p>
                 ) : null}
 
-                <figcaption className="mt-6 flex-1 border-t border-[var(--ground-line)] pt-5">
+                <figcaption className="mt-auto border-t border-[var(--ground-line)] pt-5">
                   <cite className="block not-italic text-[0.9375rem] font-medium text-[var(--ground-ink)]">
                     {t.role}, {t.client}
                   </cite>

@@ -3,7 +3,9 @@ import { FinalCta } from '@/components/marketing/FinalCta';
 import { Container } from '@/components/primitives/Container';
 import { Eyebrow } from '@/components/primitives/Eyebrow';
 import { Section } from '@/components/primitives/Section';
-import { process } from '@/lib/content/company';
+// Aliased: importing `process` would shadow the Node global for this
+// whole module, so a later process.env would silently resolve to an array.
+import { process as processSteps } from '@/lib/content/company';
 import { roles } from '@/lib/content/roles';
 
 export const metadata: Metadata = {
@@ -106,7 +108,7 @@ export default function CareersPage() {
             Client work and internal work run through the same steps. You will see all six.
           </p>
           <ol className="mt-10 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
-            {process.map((step) => (
+            {processSteps.map((step) => (
               <li key={step.step}>
                 <p className="font-mono text-[0.75rem] text-[var(--ground-ink-faint)]">
                   {step.step}
