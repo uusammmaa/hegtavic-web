@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { contrastRatio, palette, parseHex, relativeLuminance, WCAG } from './contrast';
+import { contrastRatio, grounds, palette, parseHex, relativeLuminance, WCAG } from './contrast';
 
 const TOKENS_CSS = readFileSync(join(process.cwd(), 'styles/tokens.css'), 'utf8');
 
@@ -45,8 +45,10 @@ describe('tokens.css is the source of truth', () => {
     ['color-surface', palette.surface],
     ['color-ink', palette.ink],
     ['color-ink-muted', palette.inkMuted],
+    ['color-ink-faint', palette.inkFaint],
     ['color-ink-inverse', palette.inkInverse],
     ['color-ink-inverse-muted', palette.inkInverseMuted],
+    ['color-ink-inverse-faint', palette.inkInverseFaint],
   ];
 
   it.each(mirrored)('--%s matches the mirrored palette value', (name, expected) => {
@@ -54,21 +56,56 @@ describe('tokens.css is the source of truth', () => {
   });
 });
 
-describe('permitted pairings meet WCAG 2.2 AA', () => {
-  const permitted: ReadonlyArray<[string, string, string, number]> = [
-    ['brand green on graphite', palette.brandGreen, palette.graphite, WCAG.AAA_NORMAL],
-    // The LET'S TALK button: graphite text on a brand-green fill.
-    ['graphite text on brand green', palette.graphite, palette.brandGreen, WCAG.AAA_NORMAL],
-    ['green-ink on white', palette.greenInk, palette.surface, WCAG.AA_NORMAL],
-    ['green-ink on sunken surface', palette.greenInk, palette.surfaceSunken, WCAG.AA_NORMAL],
-    ['ink on white', palette.ink, palette.surface, WCAG.AAA_NORMAL],
-    ['muted ink on white', palette.inkMuted, palette.surface, WCAG.AA_NORMAL],
-    ['inverse ink on graphite', palette.inkInverse, palette.graphite, WCAG.AAA_NORMAL],
-    ['muted inverse ink on graphite', palette.inkInverseMuted, palette.graphite, WCAG.AA_NORMAL],
-  ];
+describe('EVERY ink on EVERY ground meets WCAG 2.2 AA', () => {
+  // ⚠️  This replaced a hand-written list of pairings on 18 Aug 2026.
+  // That list could only verify what someone remembered to add, and
+  // the `faint` inks were never added — they shipped at 2.85–3.99:1
+  // and failed AA on all 13 pages. Walking the matrix means a new
+  // ink or ground cannot be introduced without a verdict.
+  const matrix = Object.entries(grounds).flatMap(([groundName, ground]) =>
+    Object.entries(ground.inks).map(
+      ([inkName, ink]) => [groundName, inkName, ink, ground.background] as const,
+    ),
+  );
 
-  it.each(permitted)('%s clears %s', (_label, fg, bg, threshold) => {
-    expect(contrastRatio(fg, bg)).toBeGreaterThanOrEqual(threshold);
+  it('covers every ground declared in tokens.css', () => {
+    const declared = [...TOKENS_CSS.matchAll(/\[data-ground='([a-z]+)'\]/g)].map((m) => m[1]);
+    expect(new Set(declared)).toEqual(new Set(Object.keys(grounds)));
+  });
+
+  it.each(matrix)('%s ground: --%s is readable', (_ground, _ink, ink, background) => {
+    expect(contrastRatio(ink, background)).toBeGreaterThanOrEqual(WCAG.AA_NORMAL);
+  });
+
+  // The ground blocks in CSS must actually resolve to what the matrix
+  // claims, or the matrix is asserting a fiction.
+  it.each(Object.entries(grounds))('%s ground declares every ink in the matrix', (_name, ground) => {
+    const at = TOKENS_CSS.indexOf(ground.token);
+    expect(at, `${ground.token} not found in tokens.css`).toBeGreaterThan(-1);
+    const body = TOKENS_CSS.slice(at, TOKENS_CSS.indexOf('}', at));
+    for (const inkName of Object.keys(ground.inks)) {
+      expect(body).toContain(`--${inkName}:`);
+    }
+  });
+});
+
+describe('the focus indicator meets SC 1.4.11 on every ground', () => {
+  // Regression guard. The focus ring hard-coded --color-brand-green
+  // until 18 Aug 2026, which is 2.33:1 on white — the indicator was
+  // invisible-by-standard on every light section. It now uses
+  // --ground-accent-ink, which is ground-aware.
+  const TYPOGRAPHY_CSS = readFileSync(join(process.cwd(), 'styles/typography.css'), 'utf8');
+
+  it('does not hard-code a brand colour', () => {
+    const rule = /:focus-visible\s*\{([^}]*)\}/.exec(TYPOGRAPHY_CSS);
+    expect(rule?.[1]).toContain('--ground-accent-ink');
+    expect(rule?.[1]).not.toContain('--color-brand-green');
+  });
+
+  it.each(Object.entries(grounds))('%s ground: accent ink clears 3:1', (_name, ground) => {
+    expect(contrastRatio(ground.inks['ground-accent-ink'], ground.background)).toBeGreaterThanOrEqual(
+      WCAG.AA_NON_TEXT,
+    );
   });
 });
 
@@ -88,10 +125,20 @@ describe('forbidden pairings — documented so they cannot be reintroduced', () 
     expect(contrastRatio(palette.surface, palette.brandGreen)).toBeLessThan(WCAG.AA_NORMAL);
   });
 
-  it('brand green still clears the non-text threshold on white', () => {
-    // It stays valid as a border, focus ring or graphical object —
-    // which is exactly how the components use it on light grounds.
+  it('brand green does NOT clear the non-text threshold on white either', () => {
+    // ⚠️  Corrected 18 Aug 2026. This test was named as though brand
+    // green passed 3:1 on white and commented "it stays valid as a
+    // border, focus ring or graphical object" — while asserting the
+    // opposite. At 2.33:1 it is valid for NEITHER text nor non-text
+    // on a light ground. The false comment is what allowed the focus
+    // ring to ship using it. On light grounds use --ground-accent-ink.
     expect(contrastRatio(palette.brandGreen, palette.surface)).toBeLessThan(WCAG.AA_NON_TEXT);
+  });
+
+  it('brand green clears the non-text threshold on graphite', () => {
+    expect(contrastRatio(palette.brandGreen, palette.graphite)).toBeGreaterThanOrEqual(
+      WCAG.AA_NON_TEXT,
+    );
   });
 });
 

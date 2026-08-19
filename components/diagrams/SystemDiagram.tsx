@@ -14,7 +14,11 @@
  *   • every id is namespaced by the `id` prop. SVG ids are global to
  *     the document, so two instances on one page would otherwise share
  *     a <title> and collapse their url(#…) marker references onto the
- *     first instance. The homepage renders this diagram twice.
+ *     first instance.
+ *
+ * This is the retrieval/grounding pipeline and belongs to the
+ * Generative AI material. The hero uses DeliveryDiagram — the two
+ * must not be swapped back into rendering the same picture twice.
  */
 export function SystemDiagram({
   className,

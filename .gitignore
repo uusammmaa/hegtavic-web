@@ -61,3 +61,6 @@ pnpm-debug.log*
 **/specimen/
 *.specimen.*
 *-specimen.*
+
+# Verification builds that run alongside a dev server (see next.config.ts)
+/.next-verify/

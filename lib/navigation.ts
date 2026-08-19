@@ -75,8 +75,8 @@ const footerNavAll: { heading: string; links: NavLink[] }[] = [
       // ⛔ Both need legal review before publication (Phase 4). The
       // contact form must not accept a submission until the privacy
       // policy is published and linked — see app/(marketing)/contact.
-      { label: 'Privacy Policy', href: '/privacy', available: false },
-      { label: 'Terms of Service', href: '/terms', available: false },
+      { label: 'Privacy Policy', href: '/privacy' },
+      { label: 'Terms of Service', href: '/terms' },
     ],
   },
 ];

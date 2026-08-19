@@ -1,7 +1,7 @@
 import { Button } from '@/components/primitives/Button';
 import { Container } from '@/components/primitives/Container';
 import { Eyebrow } from '@/components/primitives/Eyebrow';
-import { SystemDiagram } from '@/components/diagrams/SystemDiagram';
+import { DeliveryDiagram } from '@/components/diagrams/DeliveryDiagram';
 import { CTA_HREF, CTA_LABEL } from '@/lib/navigation';
 
 /**
@@ -36,9 +36,9 @@ export function Hero() {
             </h1>
 
             <p className="measure mt-7 text-lede text-[var(--ground-ink-muted)]">
-              AI and software engineering solutions built around your business. We help businesses
-              transform ideas, solve complex challenges and build technology that creates lasting
-              value.
+              AI and software engineering solutions built around your business. We help
+              organizations solve complex problems, modernize technology and build intelligent
+              products that create measurable value.
             </p>
 
             <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -57,7 +57,7 @@ export function Hero() {
 
           <div className="relative">
             <div className="rounded-lg border border-[var(--ground-line)] bg-[var(--ground-raised)]/60 p-6 backdrop-blur-sm sm:p-8">
-              <SystemDiagram id="hero-diagram" className="h-auto w-full" />
+              <DeliveryDiagram id="hero-diagram" className="h-auto w-full" />
             </div>
           </div>
         </div>

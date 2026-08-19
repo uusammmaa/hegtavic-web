@@ -18,21 +18,28 @@ import { Container } from '@/components/primitives/Container';
  *
  * REVISIT once third-party reviews are verified — a review badge
  * is exactly what this slot is for.
+ *
+ * ⚠️  REVISED 18 Aug 2026 from the owner's revision document:
+ * "Avoid leading with long technology lists. Explain the business
+ * capability first, then show relevant technologies as supporting
+ * proof."
+ *
+ * The raw ten-item technology row that sat here was the most
+ * literal instance of that on the site — it was the first thing
+ * under the hero. It is removed. Technologies still appear on every
+ * capability page and in each homepage spotlight, which is where
+ * they read as proof of a capability already explained rather than
+ * as a list standing in for one.
+ *
+ * Each pillar now carries a short outcome phrase, so the slot leads
+ * with what the work is for.
  */
 
-const pillars = ['AI', 'Software', 'Data', 'Engineering'];
-
-const stack = [
-  'Python',
-  'LLMs',
-  'RAG',
-  'React',
-  'Next.js',
-  'Node.js',
-  'FastAPI',
-  'PostgreSQL',
-  'Docker',
-  'Kubernetes',
+const pillars = [
+  { name: 'AI', note: 'Decisions and workflows, not demos' },
+  { name: 'Software', note: 'Products built to stay maintainable' },
+  { name: 'Data', note: 'Foundations you can trust and query' },
+  { name: 'Engineering', note: 'Capacity that works as your team' },
 ];
 
 export function CapabilityStrip() {
@@ -43,30 +50,24 @@ export function CapabilityStrip() {
       className="border-y border-[var(--ground-line)] bg-[var(--ground-sunken)]"
     >
       <Container>
-        <div className="flex flex-col gap-8 py-10 lg:flex-row lg:items-center lg:justify-between lg:gap-16">
+        <div className="py-10">
           {/* The green dot leads each pillar rather than sitting
               between them, so a wrap can never leave one dangling. */}
-          <ul className="flex flex-wrap items-center gap-x-7 gap-y-3 lg:flex-nowrap">
+          <ul className="grid gap-x-10 gap-y-6 sm:grid-cols-2 lg:grid-cols-4">
             {pillars.map((pillar) => (
-              <li key={pillar} className="flex items-center gap-2.5">
+              <li key={pillar.name} className="flex items-start gap-2.5">
                 <span
                   aria-hidden="true"
-                  className="size-1.5 shrink-0 rounded-full bg-brand-green"
+                  className="mt-2 size-1.5 shrink-0 rounded-full bg-brand-green"
                 />
-                <span className="text-subheading font-medium text-[var(--ground-ink)]">
-                  {pillar}
+                <span>
+                  <span className="block text-subheading font-medium text-[var(--ground-ink)]">
+                    {pillar.name}
+                  </span>
+                  <span className="mt-1 block text-[0.875rem] leading-relaxed text-[var(--ground-ink-muted)]">
+                    {pillar.note}
+                  </span>
                 </span>
-              </li>
-            ))}
-          </ul>
-
-          <ul className="flex flex-wrap items-center gap-x-5 gap-y-2 lg:max-w-[32rem] lg:justify-end">
-            {stack.map((tech) => (
-              <li
-                key={tech}
-                className="font-mono text-[0.75rem] tracking-wide text-[var(--ground-ink-faint)]"
-              >
-                {tech}
               </li>
             ))}
           </ul>

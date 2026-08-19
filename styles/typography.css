@@ -39,10 +39,22 @@ p {
 }
 
 /* ── Focus ──────────────────────────────────────────────────
-   A single visible focus treatment, never removed. Brand green
-   clears the 3:1 non-text threshold on both grounds. */
+   A single visible focus treatment, never removed.
+
+   ⚠️  Corrected 18 Aug 2026. This previously used
+   --color-brand-green directly, with a comment claiming it
+   "clears the 3:1 non-text threshold on both grounds". That was
+   false: brand green is 2.33:1 on white, so the keyboard focus
+   indicator failed WCAG 2.2 SC 1.4.11 on every light section.
+
+   --ground-accent-ink is the ground-aware green and is the only
+   correct choice here:
+     light / sunken → green-ink   5.54:1
+     dark           → brand green 7.65:1
+   Both clear the 3:1 non-text threshold. Never hard-code a brand
+   colour in a focus ring — it cannot be correct on both grounds. */
 :focus-visible {
-  outline: 2px solid var(--color-brand-green);
+  outline: 2px solid var(--ground-accent-ink);
   outline-offset: 3px;
   border-radius: 2px;
 }

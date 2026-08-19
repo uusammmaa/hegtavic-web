@@ -1,10 +1,21 @@
 import type { Metadata } from 'next';
 import { FinalCta } from '@/components/marketing/FinalCta';
+import { TeamGrid } from '@/components/marketing/TeamGrid';
 import { WhyHegtavic } from '@/components/marketing/WhyHegtavic';
 import { Container } from '@/components/primitives/Container';
 import { Eyebrow } from '@/components/primitives/Eyebrow';
 import { Section } from '@/components/primitives/Section';
-import { aboutIntro, industries, journey, mission, philosophy, values, vision } from '@/lib/content/company';
+import {
+  aboutIntro,
+  brandStory,
+  industries,
+  journey,
+  mission,
+  philosophy,
+  values,
+  vision,
+  whoWeHelp,
+} from '@/lib/content/company';
 
 export const metadata: Metadata = {
   title: 'About',
@@ -52,7 +63,12 @@ export default function AboutPage() {
               </h2>
             </div>
             <div>
-              <p className="measure text-lede text-[var(--ground-ink)]">{journey.body}</p>
+              {/* The owner's line, 18 Aug 2026 — see brandStory in
+                  lib/content/company.ts for why only the line is used. */}
+              <p className="text-display text-balance text-[var(--ground-ink)]">
+                {brandStory.line}
+              </p>
+              <p className="measure text-lede mt-8 text-[var(--ground-ink)]">{journey.body}</p>
 
               <div className="mt-12 grid gap-10 sm:grid-cols-2">
                 <div className="border-t border-[var(--ground-line)] pt-5">
@@ -123,6 +139,25 @@ export default function AboutPage() {
 
       <WhyHegtavic />
 
+      <Section ground="sunken" aria-labelledby="who-we-help-heading">
+        <Container>
+          <Eyebrow>Who we help</Eyebrow>
+          <h2 id="who-we-help-heading" className="mt-6 text-heading text-[var(--ground-ink)]">
+            Businesses at different stages
+          </h2>
+          <ul className="mt-12 grid gap-px overflow-hidden rounded-lg border border-[var(--ground-line)] bg-[var(--ground-line)] lg:grid-cols-3">
+            {whoWeHelp.map((segment) => (
+              <li key={segment.title} className="bg-[var(--ground-raised)] p-8">
+                <h3 className="text-subheading text-[var(--ground-ink)]">{segment.title}</h3>
+                <p className="mt-3 leading-relaxed text-[var(--ground-ink-muted)]">
+                  {segment.body}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </Container>
+      </Section>
+
       <Section aria-labelledby="philosophy-about-heading">
         <Container width="narrow">
           <div className="text-center">
@@ -139,6 +174,8 @@ export default function AboutPage() {
           </div>
         </Container>
       </Section>
+
+      <TeamGrid />
 
       <FinalCta />
     </>
