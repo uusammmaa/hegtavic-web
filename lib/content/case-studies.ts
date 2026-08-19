@@ -87,6 +87,12 @@ type CaseStudyBase = {
    * must contain no client branding, no client data and no identifying
    * content. Crop or blur before adding, and say in `alt` what a
    * screen reader should hear — never "screenshot".
+   *
+   * ⚠️  Use WebP, not a quantised PNG. Screenshots of interfaces are
+   * mostly flat background crossed by thin antialiased lines, and
+   * palette reduction spends its colours on the background: a 64-colour
+   * PNG turned a blue trace grey and a green one nearly white. WebP at
+   * q92 held the colour and was a third of the size.
    */
   image?: { src: string; alt: string; width: number; height: number };
 };
@@ -341,7 +347,7 @@ export const caseStudies: readonly CaseStudy[] = [
       },
     ],
     image: {
-      src: '/work/monitoring-interface.png',
+      src: '/work/monitoring-interface.webp',
       alt: 'Four physiological traces running live against a scrolling time axis: two breathing channels as regular blue waves, a slow green skin-conductance curve, and a dense red pulse trace.',
       width: 1303,
       height: 470,
