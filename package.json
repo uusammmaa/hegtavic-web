@@ -2,7 +2,7 @@
   "name": "hegtavic-web",
   "version": "0.1.0",
   "private": true,
-  "description": "Corporate website for Hegtavic — Next.js 15, Payload CMS, TypeScript, Tailwind v4",
+  "description": "Corporate website for Hegtavic — Next.js 15, TypeScript, Tailwind v4",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
