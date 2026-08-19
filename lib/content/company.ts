@@ -46,24 +46,24 @@ export const process = [
 
 export const differentiators = [
   {
-    title: 'Engineering Excellence',
-    body: 'We build reliable, secure and maintainable solutions designed for real-world use.',
+    title: 'Engineering That Solves Business Problems',
+    body: 'We build technology around real business needs, not technology for its own sake.',
   },
   {
-    title: 'Client Success',
-    body: 'We measure our work by the value and outcomes we create for our clients.',
+    title: 'AI With Practical Purpose',
+    body: 'We focus on AI that can improve decisions, automate workflows and create measurable value.',
+  },
+  {
+    title: 'Built for the Long Term',
+    body: 'We design solutions for maintainability, scalability and continuous evolution.',
   },
   {
     title: 'Collaborative by Design',
-    body: 'We work closely with your people, processes and technology teams.',
+    body: 'We work alongside clients as an extension of their team and objectives.',
   },
   {
-    title: 'Transparency & Accountability',
-    body: 'Clear communication, ownership and visibility throughout the engagement.',
-  },
-  {
-    title: 'Always Learning. Always Evolving.',
-    body: 'We continuously improve our skills, technology and engineering practices.',
+    title: 'Value Beyond Delivery',
+    body: 'Our goal is not simply to complete a project, but to create technology that continues delivering value.',
   },
 ] as const;
 
@@ -85,6 +85,66 @@ export const partnershipModels = [
     body: 'Work with Hegtavic as an extended technology capability for your organization.',
     fits: 'Long-term capability, including ongoing maintenance and support.',
     href: '/partnership',
+  },
+] as const;
+
+/**
+ * Brand story.
+ *
+ * ⚠️  RESOLVING A CONFLICT between the owner's two instructions,
+ * 18 Aug 2026.
+ *
+ *  • The revision document says, under "What Should NOT Change":
+ *    "Do not remove 'Technology With Purpose'", and lists it as
+ *    KEEP / PRIORITY — "an important differentiator".
+ *  • His message afterwards asked for "Technology That Touches Lives"
+ *    to be inserted "somewhere in brand story".
+ *
+ * The body text he sent with the new heading is word-for-word the
+ * body already attached to `philosophy` below. So the two are not
+ * alternatives to choose between — one is the philosophy heading the
+ * document protects, the other is a line he wants in the story.
+ *
+ * Both are therefore kept: "Technology With Purpose" remains the
+ * philosophy section, unchanged, and "Technology That Touches Lives"
+ * opens the brand story on /about. Neither instruction is overridden.
+ *
+ * ⛔ If he actually meant to REPLACE the philosophy heading, this is
+ * the one thing in the revision round that needs confirming — the
+ * document explicitly forbids that reading, so it is not a change to
+ * make on inference.
+ *
+ * Only the line is stored. He asked to "put this line ... in the brand
+ * story", and the paragraph he sent with it is character-for-character
+ * `philosophy.body` below, which already renders on /about. Storing it
+ * twice would print the same paragraph twice on one page.
+ */
+export const brandStory = {
+  line: 'Technology That Touches Lives',
+} as const;
+
+/**
+ * Who we help.
+ *
+ * From the revision document, "Who We Help — CONSIDER ADDING": show
+ * that Hegtavic supports businesses at different stages "without
+ * unnecessarily restricting the market to large corporations".
+ *
+ * Describes fit, not client claims — nothing here asserts that a
+ * client of any given size exists.
+ */
+export const whoWeHelp = [
+  {
+    title: 'Startups',
+    body: 'Getting a first version into production without building something that has to be thrown away at the second round of funding.',
+  },
+  {
+    title: 'Growing businesses',
+    body: 'Adding engineering capacity, or the specific capability — usually AI or data — that a small team does not have and does not need permanently.',
+  },
+  {
+    title: 'Established organizations',
+    body: 'Modernizing systems that still run the business, without a rewrite and without stopping the business to do it.',
   },
 ] as const;
 

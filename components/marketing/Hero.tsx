@@ -36,9 +36,9 @@ export function Hero() {
             </h1>
 
             <p className="measure mt-7 text-lede text-[var(--ground-ink-muted)]">
-              AI and software engineering solutions built around your business. We help businesses
-              transform ideas, solve complex challenges and build technology that creates lasting
-              value.
+              AI and software engineering solutions built around your business. We help
+              organizations solve complex problems, modernize technology and build intelligent
+              products that create measurable value.
             </p>
 
             <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
