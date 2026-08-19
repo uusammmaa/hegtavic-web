@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { FinalCta } from '@/components/marketing/FinalCta';
+import { TeamGrid } from '@/components/marketing/TeamGrid';
 import { WhyHegtavic } from '@/components/marketing/WhyHegtavic';
 import { Container } from '@/components/primitives/Container';
 import { Eyebrow } from '@/components/primitives/Eyebrow';
@@ -139,6 +140,8 @@ export default function AboutPage() {
           </div>
         </Container>
       </Section>
+
+      <TeamGrid />
 
       <FinalCta />
     </>
