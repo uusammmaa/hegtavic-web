@@ -7,7 +7,8 @@ import { footerNav } from '@/lib/navigation';
  * One reconciled service menu, matching the primary nav.
  *
  * ⚠️  Deliberately absent until confirmed (see the open questions):
- *   • office addresses — the form of the Australian presence is
+ *   • office addresses. SETTLED 19 Aug 2026: the overseas entity is
+ *     under a different name and must not be claimed. (Previously
  *     not yet established, so no location is claimed here
  *   • award badges — none are displayed until verified as current
  *   • client logos — a logo wall is a claim of scale

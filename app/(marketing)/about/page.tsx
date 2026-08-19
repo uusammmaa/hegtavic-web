@@ -29,7 +29,9 @@ export const metadata: Metadata = {
  *   • founding year
  *   • headcount and team composition
  *   • named leadership and team members
- *   • office locations (the form of the Australian presence is
+ *   • office locations. SETTLED 19 Aug 2026: the owner confirmed the
+ *     overseas presence is NOT registered under the Hegtavic name and
+ *     asked that it not be claimed. Do not add it back. (Previously
  *     not established, so no location is claimed)
  *   • award badges
  *

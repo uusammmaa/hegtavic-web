@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { FinalCta } from '@/components/marketing/FinalCta';
+import { Testimonials } from '@/components/marketing/Testimonials';
 import { Container } from '@/components/primitives/Container';
 import { Eyebrow } from '@/components/primitives/Eyebrow';
 import { Section } from '@/components/primitives/Section';
@@ -110,6 +111,8 @@ export default function WorkPage() {
           ) : null}
         </Container>
       </Section>
+
+      <Testimonials />
 
       <FinalCta
         heading="Have a Technology Challenge?"

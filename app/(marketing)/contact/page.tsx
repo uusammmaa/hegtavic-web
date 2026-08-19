@@ -21,7 +21,10 @@ export const metadata: Metadata = {
  * change.
  *
  * ⚠️  No office address or phone number is published here. The form
- * of the Australian presence is not established, and a location
+ * SETTLED 19 Aug 2026: the owner confirmed the overseas entity is
+ * registered under a different name and asked that it not be claimed.
+ * No office address appears here. Previously the form of that presence
+ * was merely unestablished; it is now a decision. A location
  * claim is exactly what a buyer's due diligence checks. The email
  * address is the one contact detail that is known to be correct.
  */
