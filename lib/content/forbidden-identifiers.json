@@ -1,5 +1,5 @@
 {
-  "note": "Truncated SHA-256 of identifiers that must never appear in published content. Hashed because this repository is public and the plaintext list would itself be the disclosure it exists to prevent.",
+  "note": "Truncated SHA-256 of identifiers that must never appear in published content. Hashed because this repository is public and the plaintext list would itself be the disclosure it exists to prevent. 'canaryLength' marks a value that is not a real identifier: it exists so the guard can be proven to work without writing a client name in this file.",
   "byLength": {
     "4": [
       "7099f399b8aab27f6f21be8c44f2b61a"
@@ -31,6 +31,10 @@
     ],
     "18": [
       "5b59738510375c23cef16d0611729742"
+    ],
+    "20": [
+      "df41f82f600b2414f6cae6734f83a66e"
     ]
-  }
+  },
+  "canaryLength": 20
 }

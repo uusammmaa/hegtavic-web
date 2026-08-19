@@ -85,7 +85,8 @@ describe('no client identity reaches the public site', () => {
     return createHash('sha256').update(value).digest('hex').slice(0, 32);
   }
 
-  const buckets = Object.entries(forbidden.byLength) as ReadonlyArray<[string, string[]]>;
+  const byLength = forbidden.byLength as Record<string, string[]>;
+  const buckets = Object.entries(byLength) as ReadonlyArray<[string, string[]]>;
 
   it.each(buckets)('contains no forbidden identifier of length %s', (length, digests) => {
     const n = Number(length);
@@ -100,11 +101,12 @@ describe('no client identity reaches the public site', () => {
   });
 
   it('detects a planted identifier — proves the guard actually works', () => {
-    // A guard nobody has seen fail is a guard nobody knows works.
-    const n = 7;
-    const banned = new Set(forbidden.byLength[String(n)] ?? []);
+    // Uses a canary value, not a real client name: writing one here
+    // would reintroduce exactly the leak this guard was hashed to fix.
+    const n = forbidden.canaryLength;
+    const banned = new Set(byLength[String(n)] ?? []);
     expect(banned.size).toBeGreaterThan(0);
-    const planted = 'x'.repeat(3) + 'dotbite' + 'y'.repeat(3);
+    const planted = `xxx canary-never-publish yyy`;
     let found = false;
     for (let i = 0; i + n <= planted.length; i += 1) {
       if (banned.has(digest(planted.slice(i, i + n)))) found = true;
