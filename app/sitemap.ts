@@ -31,6 +31,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ['/partnership', 0.8],
     ['/about', 0.8],
     ['/contact', 0.9],
+    ['/careers', 0.6],
     ['/privacy', 0.3],
     ['/terms', 0.3],
   ];

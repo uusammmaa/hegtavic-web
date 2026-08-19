@@ -54,7 +54,7 @@ const primaryNavAll: NavLink[] = [
   { label: 'About', href: '/about' },
   // Careers needs the role details, benefits and hiring process
   // before it can be published. Phase 3.
-  { label: 'Careers', href: '/careers', available: false },
+  { label: 'Careers', href: '/careers' },
 ];
 
 const footerNavAll: { heading: string; links: NavLink[] }[] = [
@@ -65,7 +65,7 @@ const footerNavAll: { heading: string; links: NavLink[] }[] = [
       { label: 'About', href: '/about' },
       { label: 'Selected Work', href: '/work' },
       { label: 'Partnership', href: '/partnership' },
-      { label: 'Careers', href: '/careers', available: false },
+      { label: 'Careers', href: '/careers' },
       { label: 'Contact', href: '/contact' },
     ],
   },
