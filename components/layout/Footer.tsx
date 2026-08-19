@@ -31,12 +31,12 @@ export function Footer() {
             {footerNav.map((group) => (
               <div key={group.heading}>
                 <h2 className="eyebrow text-[var(--ground-ink-faint)]">{group.heading}</h2>
-                <ul className="mt-5 space-y-3">
+                <ul className="mt-4 space-y-0.5">
                   {group.links.map((link) => (
                     <li key={link.href}>
                       <Link
                         href={link.href}
-                        className="text-[0.9375rem] text-[var(--ground-ink-muted)] transition-colors duration-[var(--duration-fast)] hover:text-[var(--ground-ink)]"
+                        className="inline-block py-3 text-[0.9375rem] text-[var(--ground-ink-muted)] transition-colors duration-[var(--duration-fast)] hover:text-[var(--ground-ink)]"
                       >
                         {link.label}
                       </Link>
