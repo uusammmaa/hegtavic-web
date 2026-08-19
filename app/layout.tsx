@@ -4,7 +4,28 @@ import { Header } from '@/components/layout/Header';
 import { fontVariables } from './fonts';
 import './globals.css';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
+/**
+ * Resolve the origin used for canonical URLs and OG image paths.
+ *
+ * Order matters:
+ *  1. NEXT_PUBLIC_SITE_URL — set this to the real domain at launch. It is the
+ *     only value that survives a move off Vercel, so it always wins.
+ *  2. VERCEL_PROJECT_PRODUCTION_URL — the project's stable production host.
+ *     Correct on production builds without anyone configuring anything.
+ *  3. VERCEL_URL — the per-deployment host, so preview builds describe
+ *     themselves rather than inheriting production's canonicals.
+ *  4. localhost for `next dev`.
+ *
+ * Without this, an unset env var silently produced canonicals and OG images
+ * pointing at http://localhost:3000 on a live deployment — which breaks every
+ * link preview and, once the site is indexable, every canonical tag.
+ */
+const vercelHost =
+  process.env.VERCEL_PROJECT_PRODUCTION_URL ?? process.env.VERCEL_URL;
+
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (vercelHost ? `https://${vercelHost}` : 'http://localhost:3000');
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
