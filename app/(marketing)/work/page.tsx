@@ -3,6 +3,8 @@ import { FinalCta } from '@/components/marketing/FinalCta';
 import { Container } from '@/components/primitives/Container';
 import { Eyebrow } from '@/components/primitives/Eyebrow';
 import { Section } from '@/components/primitives/Section';
+import Link from 'next/link';
+import { isSpecimen, visibleCaseStudies } from '@/lib/content/case-studies';
 import { selectedWork } from '@/lib/content/company';
 
 export const metadata: Metadata = {
@@ -21,9 +23,10 @@ export const metadata: Metadata = {
  * system only.
  *
  * ⛔ BEFORE LAUNCH: three case studies with at least one verified
- * number each. The case study template and this page's upgrade
- * path land with the CMS; the blocker is the client's own delivery
- * records, not the build.
+ * number each. The template now exists (/work/[slug]) and this page
+ * lists whatever `visibleCaseStudies` contains — which in production
+ * is verified studies only. The remaining blocker is the client's own
+ * delivery records, not the build.
  */
 export default function WorkPage() {
   return (
@@ -40,12 +43,44 @@ export default function WorkPage() {
         </Container>
       </Section>
 
-      <Section aria-labelledby="projects-heading">
+      {visibleCaseStudies.length > 0 ? (
+        <Section aria-labelledby="case-studies-heading">
+          <Container>
+            <h2 id="case-studies-heading" className="text-heading text-[var(--ground-ink)]">
+              Case studies
+            </h2>
+            <ul className="mt-10 grid gap-px overflow-hidden rounded-lg border border-[var(--ground-line)] bg-[var(--ground-line)] lg:grid-cols-2">
+              {visibleCaseStudies.map((study) => (
+                <li key={study.slug} className="bg-[var(--ground-raised)]">
+                  <Link
+                    href={`/work/${study.slug}`}
+                    className="flex h-full flex-col p-8 transition-colors duration-[var(--duration-base)] hover:bg-[var(--ground-sunken)]"
+                  >
+                    <span className="font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-[var(--ground-accent-ink)]">
+                      {study.industry}
+                      {isSpecimen(study) ? ' · specimen' : null}
+                    </span>
+                    <h3 className="mt-4 text-subheading text-[var(--ground-ink)]">{study.title}</h3>
+                    <p className="mt-3 flex-1 text-[0.9375rem] leading-relaxed text-[var(--ground-ink-muted)]">
+                      {study.summary}
+                    </p>
+                    <span className="mt-6 font-mono text-[0.8125rem] text-[var(--ground-accent-ink)]">
+                      Read the case study →
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </Container>
+        </Section>
+      ) : null}
+
+      <Section ground="sunken" aria-labelledby="projects-heading">
         <Container>
-          <h2 id="projects-heading" className="sr-only">
-            Projects
+          <h2 id="projects-heading" className="text-heading text-[var(--ground-ink)]">
+            Other projects
           </h2>
-          <ul className="grid gap-6 sm:grid-cols-2">
+          <ul className="mt-10 grid gap-6 sm:grid-cols-2">
             {selectedWork.map((project) => (
               <li
                 key={project.name}
@@ -62,10 +97,12 @@ export default function WorkPage() {
             ))}
           </ul>
 
-          <p className="measure mt-12 text-[0.9375rem] leading-relaxed text-[var(--ground-ink-muted)]">
-            Detailed case studies — covering the business challenge, our solution, the technology
-            used and the measurable outcome — are in preparation.
-          </p>
+          {visibleCaseStudies.length === 0 ? (
+            <p className="measure mt-12 text-[0.9375rem] leading-relaxed text-[var(--ground-ink-muted)]">
+              Detailed case studies — covering the business challenge, our solution, the technology
+              used and the measurable outcome — are in preparation.
+            </p>
+          ) : null}
         </Container>
       </Section>
 
