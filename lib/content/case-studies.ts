@@ -2,31 +2,56 @@
  * Case studies.
  *
  * ═══════════════════════════════════════════════════════════════
- *  ⛔  THE SPECIMEN GATE — read before adding anything here
+ *  THE VERIFICATION GATE — read before adding anything here
  * ═══════════════════════════════════════════════════════════════
  *
- * The client's own brief says: "Do not invent metrics, outcomes or
- * client claims. Use measurable results only where they can be
- * verified." Every case study currently in this file is FABRICATED
- * placeholder material written to prove the template. None of it is
- * true. None of it may be published.
+ * The client's brief says: "Do not invent metrics, outcomes or client
+ * claims. Use measurable results only where they can be verified."
  *
- * That instruction is enforced by the type system rather than by
- * discipline. `CaseStudy` is a discriminated union: a study is either
+ * That is enforced by the type system rather than by discipline.
+ * `CaseStudy` is a discriminated union with no default:
  *
- *   • { status: 'specimen',  … } — requires `specimenNotice`, and is
- *     excluded from `publishedCaseStudies` by construction; or
- *   • { status: 'verified', … } — requires `verifiedOn` and
- *     `verifiedSource`, i.e. someone recorded WHO confirmed the
- *     numbers and WHEN.
+ *   • { status: 'specimen',  … } — requires `specimenNotice` saying in
+ *     prose what is untrue, and is excluded from
+ *     `publishedCaseStudies` by construction; or
+ *   • { status: 'verified', … } — requires `verifiedOn`,
+ *     `verifiedSource` and `namingPermission`: WHO confirmed it, WHEN,
+ *     and whether the client may be named.
  *
- * There is no third state and no default. A new case study cannot be
- * added without the author choosing one, and choosing 'verified'
- * cannot be done casually because the evidence fields are required.
+ * ─────────────────────────────────────────────────────────────
+ *  19 August 2026 — the fabricated specimens were DELETED
+ * ─────────────────────────────────────────────────────────────
  *
- * This replaced a CMS field in the original plan (PLAN.md R7). A
- * database field is checked at runtime; this is checked by `tsc`, so
- * an unverified study cannot reach a production build at all.
+ * Until this date every entry here was invented placeholder content.
+ * They are replaced by five real engagements drawn from the delivery
+ * record in PROOF-EVIDENCE.md, which is kept outside this repository
+ * because this repository is public.
+ *
+ * ⚠️  EVERY CLIENT IS ANONYMISED, DELIBERATELY. None has given
+ * permission to be named, and one was excluded by name at the client's
+ * likely objection. Sector and region only. Do not add a client name
+ * without written permission recorded in `verifiedSource`.
+ *
+ * ⚠️  EVERY NUMBER BELOW IS OBSERVED, NOT ESTIMATED. Hours and dates
+ * come from the engagement record; counts of workflows, sources,
+ * systems and signal channels come from the delivered repositories.
+ * Nothing here is a modelled or inferred business outcome. If you
+ * cannot point at where a number came from, it does not go in.
+ *
+ * ⚠️  ONE ENTRY WAS ADDED AFTER A CORRECTION, and the episode is worth
+ * keeping. The job-crawler study was first REJECTED from this file:
+ * its scope document recorded the production build and the Render
+ * deployment as "not started", so on the evidence available it was a
+ * proof of concept being described as a shipped service.
+ *
+ * That scope document was stale. The engineer who built it confirmed
+ * on 19 Aug 2026 that it is live and in client use, and it is included
+ * on that basis — with the confirmation recorded in `verifiedSource`
+ * rather than assumed.
+ *
+ * The rule that survives: a claim needs a source, and "the README says
+ * so" is not one. Where a repository and a person disagree, the person
+ * who shipped it decides — and their confirmation gets written down.
  */
 
 export type CaseStudyMetric = {
@@ -60,227 +85,317 @@ type CaseStudyBase = {
 /**
  * Fabricated. Excluded from anything public.
  * `specimenNotice` exists so the author has to write down, in prose,
- * what is untrue — which is harder to do carelessly than setting a flag.
+ * what is untrue — harder to do carelessly than setting a flag.
  */
 export type SpecimenCaseStudy = CaseStudyBase & {
   status: 'specimen';
   specimenNotice: string;
 };
 
-/** Confirmed with the client. Evidence fields are mandatory. */
+/** Confirmed against the delivery record. Evidence fields mandatory. */
 export type VerifiedCaseStudy = CaseStudyBase & {
   status: 'verified';
-  /** ISO date the figures were confirmed. */
+  /** ISO date the detail was confirmed. */
   verifiedOn: string;
-  /** Who confirmed them, and against what. */
+  /** What it was confirmed against. */
   verifiedSource: string;
-  /** Written permission to name the client, where the client is named. */
+  /** Written permission to name the client, where one is named. */
   namingPermission: 'granted' | 'anonymised';
 };
 
 export type CaseStudy = SpecimenCaseStudy | VerifiedCaseStudy;
 
-const SPECIMEN_NOTICE =
-  'Fabricated placeholder. The client, the figures and the quotation are invented to demonstrate the template. Replace with verified material before launch.';
+const VERIFIED_ON = '2026-08-19';
+const SOURCE =
+  'Engagement record and delivered repository, reviewed against PROOF-EVIDENCE.md on 19 Aug 2026.';
 
 export const caseStudies: readonly CaseStudy[] = [
   {
-    status: 'specimen',
-    specimenNotice: SPECIMEN_NOTICE,
-    slug: 'claims-triage-automation',
-    title: 'Cutting claims triage from days to minutes',
-    shortTitle: 'Claims triage automation',
-    client: 'A mid-market property insurance carrier',
-    industry: 'Insurance',
-    region: 'Midwest, USA',
-    engagement: 'Fixed scope, then ongoing retainer',
-    duration: '14 weeks, ongoing since',
-    team: '3 — one ML engineer, two full-stack',
-    stack: ['Python', 'FastAPI', 'PostgreSQL', 'pgvector', 'Claude API', 'React', 'AWS', 'Textract'],
+    status: 'verified',
+    verifiedOn: VERIFIED_ON,
+    verifiedSource: SOURCE,
+    namingPermission: 'anonymised',
+    slug: 'events-platform-automation',
+    title: 'Six internal systems for an events platform, orchestrated end to end',
+    shortTitle: 'Events platform automation',
+    client: 'A Dubai-based events and ticketing platform',
+    industry: 'Events & Ticketing',
+    region: 'Dubai, UAE',
+    engagement: 'Ongoing retainer',
+    duration: '12 months, ongoing',
+    team: '1 engineer, embedded with the client’s internal team',
+    stack: ['n8n', 'Python', 'OpenAI', 'Vector search', 'Slack API', 'Google Workspace', 'Docker'],
     summary:
-      'A triage service that reads unstructured claim packets and produces a routing recommendation in which every assertion is cited back to its source document.',
+      'A long-running engagement building internal automation across news aggregation, event data synchronisation, a customer support assistant and vector-based catalogue checks — with a dry-run mode on every destructive operation.',
     problem: [
-      'First-notice-of-loss claims arrived as unstructured attachments — adjuster emails, call transcripts, PDF reports and policyholder photographs. Every one was read by a human before it could be routed, and routing decided severity, adjuster assignment and whether an inspection was needed.',
-      'Two people did this full time. Median time from arrival to routing was 31 hours, rising past three days after storm events — precisely when speed mattered most to the policyholder and to the loss ratio.',
-      'An existing vendor had quoted a rules engine requiring every claim category to be enumerated in advance. The carrier had tried that before; the rules became unmaintainable within a year.',
+      'The platform ran a growing number of internal processes by hand: aggregating news and social content, reconciling event records between systems, answering repetitive customer questions, and checking whether listings were genuinely exclusive.',
+      'Each was individually small and collectively enormous. None justified a dedicated product team, and every one that stayed manual quietly capped how fast the company could add events.',
     ],
     constraint: [
-      'Insurance claim routing cannot be a black box. Every automated decision had to be explainable to a regulator and reversible by a human, with compliance holding veto over the design.',
-      'That ruled out a fine-tuned classifier emitting a bare label. They needed the reasoning, cited against the source documents.',
+      'These systems write to live catalogue and event data. A bad sync does not fail loudly — it silently corrupts records the commercial team then works from, and nobody notices for days.',
+      'So the interesting constraint was not building the automations. It was making them safe to run repeatedly against production data, by someone who was not their author.',
     ],
     built: [
       {
-        title: 'Ingestion',
-        body: 'Documents normalised through Textract, photographs captioned, call transcripts segmented by speaker — reduced to one timestamped document with stable per-span identifiers.',
+        title: 'Orchestration in n8n',
+        body: 'Fourteen workflows covering content aggregation, event synchronisation, batched pushes and scheduled cleanups — so the client’s own team can see and adjust a pipeline without reading code.',
       },
       {
-        title: 'Retrieval',
-        body: "Underwriting guidelines, policy wordings and historical routing decisions indexed in pgvector, so recommendations are grounded in this carrier's practice rather than general knowledge.",
+        title: 'A dry run for every destructive operation',
+        body: 'Cleanup, delete-sync and vector updates each ship as a matched pair: a dry run that reports exactly what would change, and the operation itself. Nothing that can destroy data runs without a preview first.',
       },
       {
-        title: 'Recommendation',
-        body: 'A severity band, recommended adjuster specialisation, inspection flag and written rationale — in which every factual assertion carries a span identifier pointing back to source. The interface renders these as inline citations.',
+        title: 'Vector-based catalogue checks',
+        body: 'Embedding-backed comparison to establish whether a listing is genuinely exclusive, replacing an exact-match check that missed anything phrased differently.',
       },
       {
-        title: 'Human control',
-        body: 'Nothing routes automatically above a configurable severity threshold. Every override is recorded with the reviewer’s reason, and those overrides feed the evaluation set.',
+        title: 'A support assistant on the channel customers actually use',
+        body: 'Handles repetitive inbound questions on social, and escalates to a person rather than guessing when confidence is low.',
       },
       {
-        title: 'Evaluation',
-        body: 'A held-out set of historically routed claims, re-scored on every deployment. A regression in agreement rate blocks the release.',
+        title: 'Tested where this class of system fails',
+        body: 'Automated tests cover fuzzy matching, normalisation of model output and trigger conditions — the three places this kind of pipeline fails silently rather than loudly.',
       },
     ],
     metrics: [
-      { label: 'Median time to route', before: '31 hours', after: '19 minutes', delta: '↓ 97%' },
-      { label: 'Agreement with senior adjuster', after: '91.4%' },
-      { label: 'Claims routed without human edit', before: '0%', after: '68%' },
-      { label: 'Post-storm backlog peak', before: '3+ days', after: 'under 4 hours' },
+      { label: 'Internal systems delivered', after: '6' },
+      { label: 'Automation workflows in production', after: '14' },
+      { label: 'Destructive operations with a dry-run mode', after: '100%' },
+      { label: 'Engineering hours delivered', after: '225+' },
+      { label: 'Engagement length', before: 'Single workflow', after: '12 months, ongoing' },
     ],
     outcomeNote:
-      'Neither triage role was made redundant. Both moved to complex-claim review — the work the carrier had been unable to staff.',
+      'The relationship has run continuously for over a year and expanded from one workflow to six internal systems. That expansion is the outcome: the client extended the scope repeatedly rather than replacing it.',
     retrospective: [
-      'The first version summarised each document before retrieval. It was faster and materially worse: summarisation discarded exactly the incidental detail — a mentioned outbuilding, an offhand date — that drove severity.',
-      'We removed the summarisation step and retrieved against full text. Latency rose by about 900ms per claim. Against 31 hours, nobody noticed.',
+      'The dry-run pattern was not in the original scope. It was added after a sync did something unexpected in staging, and it is the single change that made the rest of the work safe to hand over.',
+      'It should have been there from the first workflow. On anything that writes to live data we now build the preview before the operation, not after it.',
     ],
   },
   {
-    status: 'specimen',
-    specimenNotice: SPECIMEN_NOTICE,
-    slug: 'field-services-dedicated-team',
-    title: 'A four-year dedicated team behind a field-services platform',
-    shortTitle: 'Field-services platform',
-    client: 'A field-services software company',
-    industry: 'B2B SaaS',
-    region: 'Queensland, Australia',
-    engagement: 'Dedicated team',
-    duration: '4 years, ongoing',
-    team: '4 — two backend, one frontend, one QA',
-    stack: ['TypeScript', 'Node.js', 'React', 'PostgreSQL', 'Redis', 'AWS', 'Terraform'],
+    status: 'verified',
+    verifiedOn: VERIFIED_ON,
+    verifiedSource: SOURCE,
+    namingPermission: 'anonymised',
+    slug: 'tender-to-vacancy-pipeline',
+    title: 'Turning public tender documents into publishable vacancies',
+    shortTitle: 'Tender-to-vacancy pipeline',
+    client: 'A Netherlands recruitment firm',
+    industry: 'Recruitment',
+    region: 'Netherlands',
+    engagement: 'Project-based',
+    duration: 'Delivered',
+    team: '1 engineer',
+    stack: ['Python', 'Playwright', 'Claude', 'HTML'],
     summary:
-      'A dedicated squad operating as part of the client’s own engineering organisation, owning scheduling, offline sync and the mobile field application.',
+      'An automation that signs in to a Dutch public procurement portal, reads a municipal tender and rewrites it as a ready-to-review Dutch vacancy post.',
     problem: [
-      'The company had product-market fit and a roadmap it could not staff. Local hiring for senior backend engineers ran nine months, and two contract agencies had delivered work that the in-house team ended up rewriting.',
-      'The failure mode was consistent: contractors delivered features that worked in isolation and did not survive contact with the scheduling engine.',
+      'Dutch public-sector staffing opportunities are published as tenders on a procurement portal: long, formal, and structured for compliance rather than for candidates.',
+      'Turning one into a vacancy post a person would actually read was manual work, done repeatedly, in a second language, under time pressure — the deadline is the same for every firm that saw the same tender.',
     ],
     constraint: [
-      'This could not be an outsourced module. The work sat in the most load-bearing part of the product, so the team had to operate inside the client’s process — their standups, their review standards, their on-call.',
-      'Continuity mattered more than flexibility. A rotating bench would have reproduced the problem they were trying to solve.',
+      'The output is published in Dutch to candidates, so a fluent-sounding mistranslation is worse than no automation at all.',
+      'The portal offers no API and requires an authenticated session, so retrieval had to work through the same interface a person uses.',
     ],
     built: [
       {
-        title: 'Scheduling engine',
-        body: 'Constraint-based assignment of jobs to technicians across skills, travel time and parts availability, replacing a first-available heuristic.',
+        title: 'Authenticated retrieval',
+        body: 'A browser session signs in and reaches a specific tender by reference, handling the portal’s own navigation rather than depending on an API that does not exist.',
       },
       {
-        title: 'Offline-first mobile sync',
-        body: 'Conflict resolution for technicians working without signal for hours — the source of most historical support load.',
+        title: 'Structured extraction before generation',
+        body: 'The tender is reduced to the fields a vacancy actually needs — role, scope, requirements, dates — before any generation happens, so the model rewrites known values instead of interpreting a wall of text.',
       },
       {
-        title: 'Shared ownership',
-        body: 'The squad carried the same on-call rotation as the in-house team. Named engineers, not interchangeable capacity.',
+        title: 'Generation into candidate-facing Dutch',
+        body: 'The extracted content is rewritten as a vacancy post in Dutch, in the register a candidate expects rather than the register a procurement document is written in.',
+      },
+      {
+        title: 'A preview a human signs off',
+        body: 'Output is written as a standalone HTML file for review before anything is published. The pipeline stops where a person should be making the decision.',
       },
     ],
     metrics: [
-      { label: 'Continuity of the same engineers', after: '4 years' },
-      { label: 'Sync-related support tickets', before: 'baseline', after: '−74%' },
-      { label: 'Median job assignment time', before: '2.4s', after: '180ms' },
-    ],
-    retrospective: [
-      'We under-invested in the QA role for the first year, treating it as a nice-to-have. Offline sync is exactly the kind of problem that cannot be verified by the person who wrote it.',
-      'Adding a dedicated QA engineer changed the defect profile more than any architectural decision we made.',
-    ],
-  },
-  {
-    status: 'specimen',
-    specimenNotice: SPECIMEN_NOTICE,
-    slug: 'nightly-batch-replacement',
-    title: 'Replacing a nightly batch that had stopped finishing overnight',
-    shortTitle: 'Data pipeline rebuild',
-    client: 'A logistics and distribution group',
-    industry: 'Logistics',
-    region: 'Ontario, Canada',
-    engagement: 'Fixed scope',
-    duration: '11 weeks',
-    team: '2 — one data engineer, one backend',
-    stack: ['Python', 'dbt', 'Airflow', 'PostgreSQL', 'S3', 'Terraform'],
-    summary:
-      'An incremental pipeline replacing a monolithic nightly job that had grown past its window, with lineage and data tests as first-class outputs.',
-    problem: [
-      'A single nightly batch built every operational report. It had grown from four hours to fourteen and no longer finished before the working day, so the operations team started each morning against stale numbers.',
-      'Nobody could say what any figure depended on. The job was one procedure that had been extended for nine years.',
-    ],
-    constraint: [
-      'Reports could not change. Finance had reconciled against these numbers for years, and any rebuild had to produce identical output before it could produce faster output.',
-    ],
-    built: [
       {
-        title: 'Parallel running',
-        body: 'The new pipeline ran alongside the old one for six weeks, with automated row-level comparison. Nothing was cut over until outputs matched exactly.',
+        label: 'Producing a draft',
+        before: 'Read, extract, translate, format by hand',
+        after: 'One command',
       },
-      {
-        title: 'Incremental models',
-        body: 'dbt models rebuilt only what changed, with lineage visible per column rather than per job.',
-      },
-      {
-        title: 'Tests as contracts',
-        body: 'Freshness, uniqueness and referential tests run per model. A failure stops the downstream build rather than publishing a wrong number.',
-      },
-    ],
-    metrics: [
-      { label: 'Pipeline runtime', before: '14 hours', after: '38 minutes' },
-      { label: 'Reports available by', before: '11:00 or later', after: '05:20' },
-      { label: 'Discrepancies at cutover', after: '0' },
-    ],
-    retrospective: [
-      'We spent three weeks on the comparison harness before writing any pipeline code, which felt slow and was the reason the cutover was uneventful.',
-      'The harness outlived the project — it is still how they validate schema changes.',
-    ],
-  },
-  {
-    status: 'specimen',
-    specimenNotice: SPECIMEN_NOTICE,
-    slug: 'staff-augmentation-rescue',
-    title: 'Two engineers into a team that had stopped shipping',
-    shortTitle: 'Staff augmentation',
-    client: 'A healthcare scheduling product',
-    industry: 'Healthcare',
-    region: 'California, USA',
-    engagement: 'Staff augmentation',
-    duration: '9 months',
-    team: '2 senior full-stack',
-    stack: ['TypeScript', 'React', 'Node.js', 'PostgreSQL', 'Playwright'],
-    summary:
-      'Two senior engineers embedded into an existing team whose release cadence had collapsed under accumulated test debt.',
-    problem: [
-      'The team had not shipped in five months. Every release candidate failed in staging for a different reason, and the test suite was slow and unreliable enough that engineers had learned to ignore it.',
-      'Management read this as a capacity problem and asked for more engineers. It was not a capacity problem.',
-    ],
-    constraint: [
-      'We said so before starting, which risked the engagement. Adding two people to a team that could not verify its own work would have produced more unverifiable work.',
-    ],
-    built: [
-      {
-        title: 'Quarantine, then repair',
-        body: 'Flaky tests were quarantined and tracked rather than deleted, so the suite became trustworthy immediately and honest about its own gaps.',
-      },
-      {
-        title: 'A release that could not be argued with',
-        body: 'One end-to-end path — book, amend, cancel — covered in Playwright and run on every commit.',
-      },
-      {
-        title: 'Handover by default',
-        body: 'Every fix was paired with an in-house engineer. The objective was that the team could do this without us.',
-      },
-    ],
-    metrics: [
-      { label: 'Time since last release', before: '5 months', after: '11 days' },
-      { label: 'Test suite runtime', before: '48 min', after: '9 min' },
-      { label: 'Release cadence at exit', after: 'weekly' },
+      { label: 'Human review before publication', after: 'Always required' },
+      { label: 'Output', after: 'Dutch, candidate-facing register' },
     ],
     outcomeNote:
-      'The engagement ended on schedule and was not renewed, which was the correct outcome and the one we had proposed.',
+      'The pipeline deliberately stops at a reviewable draft. Publishing straight to candidates was possible and was not built — the value is in removing the mechanical work, not the judgement.',
     retrospective: [
-      'We should have insisted on a written problem statement before the first sprint. We diagnosed correctly but informally, and spent the first month re-litigating it with stakeholders who had not been in the room.',
+      'The first version passed the whole tender to the model and asked for a vacancy. It produced fluent output that quietly dropped requirements buried in the middle of the document.',
+      'Extracting to a structured shape first, then generating from that, took longer to build and is the reason the output can be trusted.',
+    ],
+  },
+  {
+    status: 'verified',
+    verifiedOn: VERIFIED_ON,
+    verifiedSource: SOURCE,
+    namingPermission: 'anonymised',
+    slug: 'resilient-price-monitoring',
+    title: 'Seven data sources that keep working when they would rather not be read',
+    shortTitle: 'Resilient price monitoring',
+    client: 'A travel client',
+    industry: 'Travel',
+    region: 'International',
+    engagement: 'Project-based',
+    duration: 'Delivered',
+    team: '1 engineer',
+    stack: ['Python', 'Playwright', 'Amadeus API', 'Google Sheets API', 'Docker'],
+    summary:
+      'Continuous price monitoring across seven sources — two APIs and five sites that actively resist automated reading — consolidated into one comparable view.',
+    problem: [
+      'Prices for the same route differ across booking sites and move constantly. Comparing them by hand means checking seven places repeatedly and still missing the window.',
+      'Two of the seven offer an API. The other five do not, and are built to discourage exactly this.',
+    ],
+    constraint: [
+      'Anything that hammers a booking site is blocked within hours, and a blocked source is not a degraded feature — it is a silently missing input that makes every comparison wrong.',
+      'So the design problem was never extraction. It was running indefinitely without becoming unwelcome.',
+    ],
+    built: [
+      {
+        title: 'API first, always',
+        body: 'Where an official API exists it is used. Scraping is the fallback for sources that offer nothing, never the default approach.',
+      },
+      {
+        title: 'One source per cycle, on a jittered interval',
+        body: 'Sources are rotated rather than polled together, with randomised gaps and automatic backoff when a site pushes back. The system is deliberately slower than it could be.',
+      },
+      {
+        title: 'Interception before parsing',
+        body: 'Where a site loads its own data over the network, that response is read directly, with DOM parsing as the fallback — fewer assumptions about markup that changes weekly.',
+      },
+      {
+        title: 'Explicit merge rules',
+        body: 'A result with the same booking link and price is skipped; the same link at a new price updates in place. Without this the output becomes thousands of near-duplicate rows within days.',
+      },
+      {
+        title: 'Delivered where the client already works',
+        body: 'Results land in Google Sheets — one tab per source plus a combined view of the cheapest across all of them. No new tool for anyone to learn.',
+      },
+    ],
+    metrics: [
+      { label: 'Sources monitored', after: '7' },
+      { label: 'Sources offering an official API', after: '2 of 7' },
+      { label: 'Consolidated view', after: 'Top 30 across all sources' },
+      { label: 'Deployment', after: 'Dockerised, runs unattended' },
+    ],
+    retrospective: [
+      'The first version polled every source on a fixed schedule and was blocked by two of them inside a day.',
+      'Rotation, jitter and backoff made each cycle slower and are the reason it still runs. On this kind of work the constraint is not how fast you can read a page once.',
+    ],
+  },
+  {
+    status: 'verified',
+    verifiedOn: VERIFIED_ON,
+    verifiedSource: SOURCE,
+    namingPermission: 'anonymised',
+    slug: 'physiological-monitoring-interface',
+    title: 'A real-time physiological monitoring interface in the browser',
+    shortTitle: 'Monitoring interface',
+    client: 'A medical training client',
+    industry: 'Healthcare & Training',
+    region: 'International',
+    engagement: 'Project-based',
+    duration: 'Delivered',
+    team: '1 engineer',
+    stack: ['Next.js', 'React', 'TypeScript', 'Canvas', 'Zustand', 'Framer Motion'],
+    summary:
+      'A browser-based instrument interface rendering live breathing, skin-conductance and pulse traces on a rolling buffer, with interactive markers and operator controls.',
+    problem: [
+      'Physiological monitoring interfaces are normally tied to hardware, which makes them awkward to use for training, demonstration or interface development.',
+      'The requirement was an instrument that behaves like the real thing in a browser — continuous, responsive, and convincing to someone who has used the physical equivalent.',
+    ],
+    constraint: [
+      'Three signals redraw continuously against a moving time window. Built as ordinary interface updates this stutters, and a monitoring trace that stutters is immediately wrong to anyone familiar with one.',
+      'It has to hold a steady frame rate while staying interactive.',
+    ],
+    built: [
+      {
+        title: 'Canvas rendering on a rolling buffer',
+        body: 'Three channels drawn to canvas against a continuously moving sixty-second window rather than as interface nodes, so the traces stay smooth as they scroll.',
+      },
+      {
+        title: 'Interactive markers',
+        body: 'Column markers can be placed and moved against the live trace — the interaction an operator actually performs on this class of instrument.',
+      },
+      {
+        title: 'Operator signal controls',
+        body: 'Hold-to-distort applies live distortion to a running signal, so a scenario can be demonstrated on demand rather than waited for.',
+      },
+      {
+        title: 'Predictable state',
+        body: 'Signal generation, buffer and interaction state kept in one store, so what is on screen is always derived from one source rather than several components disagreeing.',
+      },
+    ],
+    metrics: [
+      { label: 'Signal channels rendered live', after: '3' },
+      { label: 'Rolling time window', after: '60 seconds' },
+      { label: 'Hardware required', before: 'Dedicated instrument', after: 'A browser' },
+    ],
+    retrospective: [
+      'The first implementation updated component state on every animation frame — the obvious approach and the wrong one, since it re-rendered the tree sixty times a second.',
+      'Moving the signal path onto the canvas directly, keeping the component layer for the interface around it, is what made it hold frame rate.',
+    ],
+  },
+  {
+    status: 'verified',
+    verifiedOn: VERIFIED_ON,
+    verifiedSource:
+      'Confirmed live and in client use by the engineer who built and delivered it, 19 Aug 2026. Note: the repository scope document was out of date and understated delivery.',
+    namingPermission: 'anonymised',
+    slug: 'multi-source-job-api',
+    title: 'One schema for job listings that live on platforms without APIs',
+    shortTitle: 'Multi-source job API',
+    client: 'An Austrian digital agency',
+    industry: 'Recruitment Technology',
+    region: 'Austria',
+    engagement: 'Project-based',
+    duration: 'Delivered, in production use',
+    team: '1 engineer',
+    stack: ['Python', 'FastAPI', 'Playwright', 'JSON Schema', 'Render'],
+    summary:
+      'A crawler that pulls public job listings from recruitment platforms with no API, normalises every source to one identical schema, and serves them from an authenticated endpoint on a schedule.',
+    problem: [
+      'The listings the client needed were published on recruitment platforms built for candidates to browse, not for systems to read. No REST API, no export, no feed.',
+      'Each platform structures its listings differently, so consuming two of them meant writing and maintaining two integrations — and a third platform would mean a third.',
+    ],
+    constraint: [
+      'One platform runs on software that holds an authenticated session and paginates over POST requests with CSRF protection. It cannot be read by requesting a URL.',
+      'The output feeds another system, so the schema mattered more than the extraction: a consumer should integrate once and never care how many sources sit behind it.',
+    ],
+    built: [
+      {
+        title: 'One schema, many sources',
+        body: 'Every source returns the identical job record regardless of where it came from. Adding a platform is a new source module, not a new integration for whoever consumes the data.',
+      },
+      {
+        title: 'Session, CSRF and POST pagination handled',
+        body: 'The primary platform is read the way a signed-in person reads it — session established, tokens carried, pages walked — because there is no other route in.',
+      },
+      {
+        title: 'An authenticated endpoint',
+        body: 'Results are served over HTTP behind an API key, with the source selectable per request, so the consumer asks for what it needs rather than receiving a dump.',
+      },
+      {
+        title: 'Scheduled, not on demand',
+        body: 'Listings refresh on a schedule rather than on every request, so the platforms see a predictable, modest pattern of traffic and the consumer gets an instant response.',
+      },
+    ],
+    metrics: [
+      { label: 'Sources behind one schema', after: '2, extensible' },
+      { label: 'Integrations required by the consumer', before: 'One per platform', after: '1' },
+      { label: 'Listings from the primary source', after: '100+' },
+      { label: 'Access', after: 'API key required' },
+    ],
+    outcomeNote:
+      'Crawling was agreed with the platform owner rather than assumed. The listings are public and the client had permission — worth stating, because the alternative is a capability that cannot be discussed openly.',
+    retrospective: [
+      'The first version modelled each source close to its own structure, which was faster to write and pushed the difference onto whoever consumed it.',
+      'Normalising to one schema at the source boundary was the right call and should have been the starting point.',
     ],
   },
 ];
@@ -288,8 +403,7 @@ export const caseStudies: readonly CaseStudy[] = [
 /**
  * Anything the public site may render.
  *
- * ⛔ Do not widen this to include specimens. `CONTENT-SPECIMEN.md` and
- * PLAN.md §6.2 both make an unverified case study a launch blocker.
+ * ⛔ Do not widen this to include specimens.
  */
 export const publishedCaseStudies: readonly VerifiedCaseStudy[] = caseStudies.filter(
   (study): study is VerifiedCaseStudy => study.status === 'verified',
@@ -299,12 +413,6 @@ export const specimenCaseStudies: readonly SpecimenCaseStudy[] = caseStudies.fil
   (study): study is SpecimenCaseStudy => study.status === 'specimen',
 );
 
-/**
- * Specimens render only when explicitly switched on, so the template
- * can be shown to the client without the material being reachable in
- * production. Vercel sets VERCEL_ENV=production for the production
- * deployment; previews and local development are not production.
- */
 export { specimensVisible } from './specimen';
 import { specimensVisible } from './specimen';
 

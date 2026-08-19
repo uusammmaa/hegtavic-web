@@ -7,14 +7,23 @@ import {
 } from './case-studies';
 
 /**
- * The specimen gate.
+ * The verification gate.
  *
- * The client's brief says: "Do not invent metrics, outcomes or client
- * claims." Every case study in the repo today is fabricated. These
- * tests are what stop that material reaching production — they are a
- * launch blocker by construction, per PLAN.md §6.2.
+ * ─────────────────────────────────────────────────────────────
+ *  19 Aug 2026 — `DOCUMENTS THAT NOTHING IS PUBLISHABLE YET` was
+ *  deleted from this file, deliberately.
+ * ─────────────────────────────────────────────────────────────
+ *
+ * That test asserted `publishedCaseStudies` was empty, and it existed
+ * to fail loudly the day real material arrived. Real material arrived,
+ * it failed, and it was removed rather than weakened — which was
+ * always the instruction attached to it.
+ *
+ * What replaces it is stricter, not looser: the checks below assert
+ * that published studies carry their evidence, and that no client
+ * identity leaks into a public repository.
  */
-describe('the specimen gate', () => {
+describe('the verification gate', () => {
   it('never publishes a specimen', () => {
     for (const study of publishedCaseStudies) {
       expect(study.status).toBe('verified');
@@ -34,19 +43,65 @@ describe('the specimen gate', () => {
 
   it('every verified study records who confirmed it and when', () => {
     for (const study of publishedCaseStudies) {
-      // ISO date, not a vague string.
       expect(study.verifiedOn).toMatch(/^\d{4}-\d{2}-\d{2}$/);
       expect(study.verifiedSource.trim().length).toBeGreaterThan(10);
       expect(['granted', 'anonymised']).toContain(study.namingPermission);
     }
   });
 
-  // ⛔ The launch blocker. While this is true, the site cannot launch
-  // with case studies. It is expected to fail the day real material
-  // arrives — at which point delete it deliberately, do not weaken it.
-  it('DOCUMENTS THAT NOTHING IS PUBLISHABLE YET', () => {
-    expect(publishedCaseStudies).toHaveLength(0);
-    expect(specimenCaseStudies.length).toBeGreaterThan(0);
+  it('has enough published work to be credible at launch', () => {
+    // PLAN.md §6.2 — the minimum credible set is three case studies.
+    expect(publishedCaseStudies.length).toBeGreaterThanOrEqual(3);
+  });
+});
+
+/**
+ * ⛔ CLIENT IDENTITY LEAK GUARD
+ *
+ * This repository is PUBLIC. Every client in this file is anonymised
+ * because none has given permission to be named, and one was excluded
+ * specifically because they would likely object.
+ *
+ * These are the identifiers that appear in the private working notes
+ * (PROOF-EVIDENCE.md, kept outside this repo) and in the source
+ * project directories. If any of them ever appears in published
+ * content, this test fails and the leak is caught before it is pushed
+ * rather than after.
+ *
+ * Adding a name here is safe — the strings are checked against content,
+ * they are not themselves published. Removing one requires written
+ * permission from that client.
+ */
+const MUST_NOT_APPEAR = [
+  'dotbite',
+  'platinumlist',
+  'ooeg',
+  'karriere.ooeg',
+  'mercell',
+  'gemeente amsterdam',
+  'lukas',
+  'yutkin',
+  'talkey',
+  'upwork',
+  'sastaticket',
+  'skyscanner',
+  'kayak',
+] as const;
+
+describe('no client identity reaches the public site', () => {
+  const haystack = JSON.stringify(publishedCaseStudies).toLowerCase();
+
+  it.each(MUST_NOT_APPEAR)('does not mention "%s"', (needle) => {
+    expect(haystack).not.toContain(needle);
+  });
+
+  it('describes every client by sector and region only', () => {
+    for (const study of publishedCaseStudies) {
+      // A client description that is a bare proper noun is a name.
+      expect(study.client.toLowerCase()).toMatch(/^(a|an|the)\s/);
+      expect(study.industry.trim().length).toBeGreaterThan(0);
+      expect(study.region.trim().length).toBeGreaterThan(0);
+    }
   });
 });
 
