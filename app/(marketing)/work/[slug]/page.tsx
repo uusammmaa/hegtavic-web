@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { FinalCta } from '@/components/marketing/FinalCta';
@@ -112,6 +113,30 @@ export default async function CaseStudyPage({ params }: { params: Promise<Params
           </div>
         </Container>
       </Section>
+
+      {study.image ? (
+        <Section tight>
+          <Container>
+            {/* Real delivered work, not stock imagery — PLAN.md 5.5.
+                The frame keeps a light-UI screenshot from sitting
+                directly on the page ground with no edge. */}
+            <figure className="overflow-hidden rounded-lg border border-[var(--ground-line)] bg-[var(--ground-raised)]">
+              <Image
+                src={study.image.src}
+                alt={study.image.alt}
+                width={study.image.width}
+                height={study.image.height}
+                className="h-auto w-full"
+                sizes="(min-width: 1024px) 62rem, 100vw"
+                priority={false}
+              />
+              <figcaption className="border-t border-[var(--ground-line)] px-5 py-3 text-[0.875rem] text-[var(--ground-ink-muted)]">
+                From the delivered interface. Client branding and session detail removed.
+              </figcaption>
+            </figure>
+          </Container>
+        </Section>
+      ) : null}
 
       <Section ground="sunken">
         <Container>
