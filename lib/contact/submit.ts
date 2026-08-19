@@ -23,6 +23,14 @@ export type ContactState = {
   errors?: Record<string, string>;
   /** Echoed back so a failed submit does not wipe what was typed. */
   values?: Record<string, string>;
+  /**
+   * True when the Turnstile token was already spent on this attempt,
+   * so the client must reset the widget before the visitor retries.
+   * Without this a retry replays a consumed token, siteverify returns
+   * timeout-or-duplicate, and the visitor sees a misleading "could
+   * not verify" error for what was really a mail-delivery failure.
+   */
+  resetChallenge?: boolean;
 };
 
 const MAX = { name: 100, email: 254, company: 120, country: 60, message: 5000 } as const;
@@ -30,9 +38,54 @@ const MAX = { name: 100, email: 254, company: 120, country: 60, message: 5000 } 
 /** RFC-pragmatic: rejects the obvious, does not attempt full RFC 5322. */
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
+const TAB = 0x09;
+const LINE_FEED = 0x0a;
+const SPACE = 0x20;
+const DELETE = 0x7f;
+
+/**
+ * Remove control characters.
+ *
+ * ⚠️  Not cosmetic. `name` and `company` are interpolated into the
+ * email Subject header; a value containing CR or LF could inject
+ * additional headers depending on how the provider serialises them.
+ *
+ * Written as a code-point scan rather than a regex character class so
+ * no literal control character appears in this source file — they are
+ * invisible in review and easy to corrupt in transit.
+ *
+ * `keepNewlines` is for the message body, where line breaks are
+ * legitimate content. Elsewhere a line break becomes a space, so a
+ * pasted multi-line value stays readable instead of running together.
+ */
+function stripControl(value: string, keepNewlines: boolean): string {
+  let out = '';
+  for (const char of value) {
+    const code = char.codePointAt(0) ?? 0;
+    const isControl = code < SPACE || code === DELETE;
+    if (!isControl) {
+      out += char;
+    } else if (keepNewlines && (code === LINE_FEED || code === TAB)) {
+      out += char;
+    } else if (!keepNewlines) {
+      out += ' ';
+    }
+  }
+  return out;
+}
+
+/** A single-line field: control characters collapse to spaces. */
 function str(data: FormData, key: string): string {
   const raw = data.get(key);
-  return typeof raw === 'string' ? raw.trim() : '';
+  if (typeof raw !== 'string') return '';
+  return stripControl(raw, false).replace(/ {2,}/g, ' ').trim();
+}
+
+/** The message body: newlines and tabs survive, other controls do not. */
+function multiline(data: FormData, key: string): string {
+  const raw = data.get(key);
+  if (typeof raw !== 'string') return '';
+  return stripControl(raw, true).trim();
 }
 
 async function verifyTurnstile(token: string, ip: string | null): Promise<boolean> {
@@ -77,8 +130,15 @@ export async function submitContact(
     country: str(data, 'country'),
     area: str(data, 'area'),
     budget: str(data, 'budget'),
-    message: str(data, 'message'),
+    message: multiline(data, 'message'),
   };
+
+  // Consent is echoed like every other field. Without this, React
+  // resets the uncontrolled checkbox after the action resolves, so a
+  // submission rejected for an unrelated reason returns with consent
+  // silently unticked and is then rejected a second time.
+  const consented = Boolean(data.get('consent'));
+  const echo = { ...values, consent: consented ? 'on' : '' };
 
   // Honeypot. A real person never fills a field they cannot see.
   // Respond as though it succeeded so a bot learns nothing.
@@ -95,7 +155,8 @@ export async function submitContact(
 
   if (values.company.length > MAX.company) errors.company = 'That is too long.';
   if (values.country.length > MAX.country) errors.country = 'That is too long.';
-  if (values.message.length > MAX.message) errors.message = 'Please shorten your message.';
+  if (values.message.length > MAX.message)
+    errors.message = `Please shorten this to under ${MAX.message.toLocaleString()} characters.`;
 
   // Select values must be one we offered, not whatever was posted.
   if (values.area && !contactAreas.some((a) => a.value === values.area))
@@ -103,10 +164,15 @@ export async function submitContact(
   if (values.budget && !budgetRanges.some((b) => b.value === values.budget))
     errors.budget = 'Please choose one of the listed ranges.';
 
-  if (!data.get('consent')) errors.consent = 'Please confirm you have read the privacy policy.';
+  if (!consented) errors.consent = 'Please confirm you have read the privacy policy.';
 
   if (Object.keys(errors).length > 0) {
-    return { status: 'error', errors, values, message: 'Please check the highlighted fields.' };
+    return {
+      status: 'error',
+      errors,
+      values: echo,
+      message: 'Please check the highlighted fields.',
+    };
   }
 
   const forwarded = (await headers()).get('x-forwarded-for');
@@ -116,8 +182,9 @@ export async function submitContact(
   if (!passed) {
     return {
       status: 'error',
-      values,
-      message: 'We could not verify that submission. Please reload the page and try again.',
+      values: echo,
+      resetChallenge: true,
+      message: 'We could not verify that submission. Please try again.',
     };
   }
 
@@ -131,7 +198,8 @@ export async function submitContact(
     console.error('[contact] missing RESEND_API_KEY, CONTACT_TO_EMAIL or CONTACT_FROM_EMAIL');
     return {
       status: 'error',
-      values,
+      values: echo,
+      resetChallenge: true,
       message: 'Something went wrong on our side. Please email us directly at info@hegtavic.com.',
     };
   }
@@ -156,7 +224,8 @@ export async function submitContact(
       console.error('[contact] resend responded', res.status, await res.text());
       return {
         status: 'error',
-        values,
+        values: echo,
+        resetChallenge: true,
         message: 'We could not send that just now. Please email us directly at info@hegtavic.com.',
       };
     }
@@ -164,7 +233,8 @@ export async function submitContact(
     console.error('[contact] resend threw', error);
     return {
       status: 'error',
-      values,
+      values: echo,
+      resetChallenge: true,
       message: 'We could not send that just now. Please email us directly at info@hegtavic.com.',
     };
   }

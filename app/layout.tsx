@@ -20,8 +20,17 @@ import './globals.css';
  * pointing at http://localhost:3000 on a live deployment — which breaks every
  * link preview and, once the site is indexable, every canonical tag.
  */
+/**
+ * ⚠️  Do NOT collapse this into `PRODUCTION_URL ?? VERCEL_URL`.
+ * Vercel sets VERCEL_PROJECT_PRODUCTION_URL on EVERY deployment,
+ * previews included, so a `??` chain never reaches VERCEL_URL and
+ * every preview would emit canonicals pointing at production — the
+ * exact bug this block exists to avoid. Branch on VERCEL_ENV.
+ */
 const vercelHost =
-  process.env.VERCEL_PROJECT_PRODUCTION_URL ?? process.env.VERCEL_URL;
+  process.env.VERCEL_ENV === 'production'
+    ? process.env.VERCEL_PROJECT_PRODUCTION_URL
+    : (process.env.VERCEL_URL ?? process.env.VERCEL_PROJECT_PRODUCTION_URL);
 
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ??

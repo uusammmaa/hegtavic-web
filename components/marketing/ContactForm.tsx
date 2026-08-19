@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Script from 'next/script';
-import { useActionState, useId } from 'react';
+import { useActionState, useEffect, useId, useRef } from 'react';
 import { useFormStatus } from 'react-dom';
 import { contactAreas, budgetRanges } from '@/lib/contact/fields';
 import { submitContact, type ContactState } from '@/lib/contact/submit';
@@ -21,6 +21,12 @@ import { submitContact, type ContactState } from '@/lib/contact/submit';
  */
 
 const initialState: ContactState = { status: 'idle' };
+
+declare global {
+  interface Window {
+    turnstile?: { reset: (container?: HTMLElement) => void };
+  }
+}
 
 const inputClass =
   'mt-2 h-11 w-full rounded-md border border-[var(--ground-line-strong)] bg-[var(--ground-raised)] px-3 text-[0.9375rem] text-[var(--ground-ink)]';
@@ -51,6 +57,17 @@ export function ContactForm() {
   const [state, formAction] = useActionState(submitContact, initialState);
   const uid = useId();
   const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+  const challengeRef = useRef<HTMLDivElement>(null);
+
+  // A Turnstile token is single-use and is spent by the server before
+  // the mail send. If the send then fails, retrying would replay a
+  // consumed token and siteverify would answer timeout-or-duplicate —
+  // showing a "could not verify" error for a delivery problem. Reset
+  // the widget whenever the server says the token was spent.
+  useEffect(() => {
+    if (!state.resetChallenge) return;
+    if (challengeRef.current) window.turnstile?.reset(challengeRef.current);
+  }, [state]);
 
   const err = (name: string) => state.errors?.[name];
   const errId = (name: string) => `${uid}-${name}-error`;
@@ -138,8 +155,11 @@ export function ContactForm() {
             id={`${uid}-company`}
             name="company"
             defaultValue={value('company')}
+            aria-invalid={Boolean(err('company'))}
+            aria-describedby={err('company') ? errId('company') : undefined}
             className={inputClass}
           />
+          <FieldError id={errId('company')} message={err('company')} />
         </div>
 
         <div>
@@ -150,8 +170,11 @@ export function ContactForm() {
             id={`${uid}-country`}
             name="country"
             defaultValue={value('country')}
+            aria-invalid={Boolean(err('country'))}
+            aria-describedby={err('country') ? errId('country') : undefined}
             className={inputClass}
           />
+          <FieldError id={errId('country')} message={err('country')} />
         </div>
 
         <div className="sm:col-span-2">
@@ -162,6 +185,8 @@ export function ContactForm() {
             id={`${uid}-area`}
             name="area"
             defaultValue={value('area')}
+            aria-invalid={Boolean(err('area'))}
+            aria-describedby={err('area') ? errId('area') : undefined}
             className={inputClass}
           >
             <option value="">Select an area</option>
@@ -171,6 +196,7 @@ export function ContactForm() {
               </option>
             ))}
           </select>
+          <FieldError id={errId('area')} message={err('area')} />
         </div>
 
         <div className="sm:col-span-2">
@@ -181,6 +207,8 @@ export function ContactForm() {
             id={`${uid}-budget`}
             name="budget"
             defaultValue={value('budget')}
+            aria-invalid={Boolean(err('budget'))}
+            aria-describedby={err('budget') ? errId('budget') : undefined}
             className={inputClass}
           >
             <option value="">Select a range</option>
@@ -190,6 +218,7 @@ export function ContactForm() {
               </option>
             ))}
           </select>
+          <FieldError id={errId('budget')} message={err('budget')} />
         </div>
 
         <div className="sm:col-span-2">
@@ -201,8 +230,11 @@ export function ContactForm() {
             name="message"
             rows={6}
             defaultValue={value('message')}
+            aria-invalid={Boolean(err('message'))}
+            aria-describedby={err('message') ? errId('message') : undefined}
             className="mt-2 w-full rounded-md border border-[var(--ground-line-strong)] bg-[var(--ground-raised)] px-3 py-2.5 text-[0.9375rem] leading-relaxed text-[var(--ground-ink)]"
           />
+          <FieldError id={errId('message')} message={err('message')} />
         </div>
 
         {/* Honeypot — hidden from people, not from bots. */}
@@ -217,6 +249,7 @@ export function ContactForm() {
               type="checkbox"
               name="consent"
               required
+              defaultChecked={state.values?.consent === 'on'}
               aria-invalid={Boolean(err('consent'))}
               aria-describedby={err('consent') ? errId('consent') : undefined}
               className="mt-1 h-4 w-4 shrink-0 accent-[var(--ground-accent-ink)]"
@@ -237,7 +270,12 @@ export function ContactForm() {
 
         {siteKey ? (
           <div className="sm:col-span-2">
-            <div className="cf-turnstile" data-sitekey={siteKey} data-theme="auto" />
+            <div
+              ref={challengeRef}
+              className="cf-turnstile"
+              data-sitekey={siteKey}
+              data-theme="auto"
+            />
           </div>
         ) : null}
 

@@ -305,8 +305,8 @@ export const specimenCaseStudies: readonly SpecimenCaseStudy[] = caseStudies.fil
  * production. Vercel sets VERCEL_ENV=production for the production
  * deployment; previews and local development are not production.
  */
-export const specimensVisible =
-  process.env.NEXT_PUBLIC_SHOW_SPECIMEN === 'true' && process.env.VERCEL_ENV !== 'production';
+export { specimensVisible } from './specimen';
+import { specimensVisible } from './specimen';
 
 export const visibleCaseStudies: readonly CaseStudy[] = specimensVisible
   ? caseStudies

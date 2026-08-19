@@ -77,8 +77,13 @@ export default function WorkPage() {
 
       <Section ground="sunken" aria-labelledby="projects-heading">
         <Container>
+          {/* "Other" only makes sense relative to the case-study
+              section above, which renders nothing until a study is
+              verified. Without this the live page would head its only
+              content block "Other projects" with nothing to be other
+              than. */}
           <h2 id="projects-heading" className="text-heading text-[var(--ground-ink)]">
-            Other projects
+            {visibleCaseStudies.length > 0 ? 'Other projects' : 'Projects'}
           </h2>
           <ul className="mt-10 grid gap-6 sm:grid-cols-2">
             {selectedWork.map((project) => (

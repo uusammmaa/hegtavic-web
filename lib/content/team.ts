@@ -107,8 +107,8 @@ export const teamMembers: readonly TeamMember[] = [
   },
 ];
 
-export const specimensVisible =
-  process.env.NEXT_PUBLIC_SHOW_SPECIMEN === 'true' && process.env.VERCEL_ENV !== 'production';
+export { specimensVisible } from './specimen';
+import { specimensVisible } from './specimen';
 
 export const publishedTeam: readonly VerifiedTeamMember[] = teamMembers.filter(
   (member): member is VerifiedTeamMember => member.status === 'verified',
