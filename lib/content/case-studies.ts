@@ -80,6 +80,15 @@ type CaseStudyBase = {
   metrics: readonly CaseStudyMetric[];
   outcomeNote?: string;
   retrospective: readonly string[];
+  /**
+   * A screenshot of the delivered work.
+   *
+   * ⚠️  Anything referenced here is published from a PUBLIC repo. It
+   * must contain no client branding, no client data and no identifying
+   * content. Crop or blur before adding, and say in `alt` what a
+   * screen reader should hear — never "screenshot".
+   */
+  image?: { src: string; alt: string; width: number; height: number };
 };
 
 /**
@@ -331,6 +340,12 @@ export const caseStudies: readonly CaseStudy[] = [
         body: 'Signal generation, buffer and interaction state kept in one store, so what is on screen is always derived from one source rather than several components disagreeing.',
       },
     ],
+    image: {
+      src: '/work/monitoring-interface.png',
+      alt: 'Four physiological traces running live against a scrolling time axis: two breathing channels as regular blue waves, a slow green skin-conductance curve, and a dense red pulse trace.',
+      width: 1303,
+      height: 470,
+    },
     metrics: [
       { label: 'Signal channels rendered live', after: '3' },
       { label: 'Rolling time window', after: '60 seconds' },

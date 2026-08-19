@@ -13,6 +13,18 @@ const nextConfig: NextConfig = {
    * Unset in CI and on Vercel, so those use the default .next.
    */
   ...(process.env.NEXT_DIST_DIR ? { distDir: process.env.NEXT_DIST_DIR } : {}),
+  /**
+   * Next redirects /path/ to /path in the routing layer, BEFORE
+   * middleware runs. Every injected spam URL was indexed WITH a
+   * trailing slash, so without this a crawler received 308 first and
+   * only reached the 410 on a second request — announcing a permanent
+   * redirect for a URL that must announce permanent deletion.
+   *
+   * Deferring it lets middleware answer 410 directly. middleware.ts
+   * reimplements the normal trailing-slash redirect for everything
+   * else, so behaviour is unchanged for real pages.
+   */
+  skipTrailingSlashRedirect: true,
   reactStrictMode: true,
   poweredByHeader: false,
   images: {
