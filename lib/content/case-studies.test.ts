@@ -1,4 +1,6 @@
+import { createHash } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
+import forbidden from './forbidden-identifiers.json';
 import {
   caseStudies,
   publishedCaseStudies,
@@ -58,46 +60,60 @@ describe('the verification gate', () => {
 /**
  * ⛔ CLIENT IDENTITY LEAK GUARD
  *
- * This repository is PUBLIC. Every client in this file is anonymised
- * because none has given permission to be named, and one was excluded
- * specifically because they would likely object.
+ * This repository is PUBLIC. Every client in case-studies.ts is
+ * anonymised because none has given permission to be named.
  *
- * These are the identifiers that appear in the private working notes
- * (PROOF-EVIDENCE.md, kept outside this repo) and in the source
- * project directories. If any of them ever appears in published
- * content, this test fails and the leak is caught before it is pushed
- * rather than after.
+ * ⚠️  THE LIST IS HASHED, AND THAT IS THE WHOLE POINT.
+ * The first version of this guard listed the client and platform names
+ * in plaintext — in a public repo. It would have been the disclosure it
+ * exists to prevent, and git history would have kept it after any
+ * later deletion. Same reasoning as lib/seo/gone-paths.json.
  *
- * Adding a name here is safe — the strings are checked against content,
- * they are not themselves published. Removing one requires written
- * permission from that client.
+ * Matching still works: for each identifier length we slide a window
+ * of that length over the published content and hash it, so a
+ * substring match is detected without the substring ever being
+ * written down. Published content is a few kilobytes, so the cost is
+ * irrelevant.
+ *
+ * To add an identifier, hash it the same way and drop the digest into
+ * the right length bucket. Never add the plaintext.
  */
-const MUST_NOT_APPEAR = [
-  'dotbite',
-  'platinumlist',
-  'ooeg',
-  'karriere.ooeg',
-  'mercell',
-  'gemeente amsterdam',
-  'lukas',
-  'yutkin',
-  'talkey',
-  'upwork',
-  'sastaticket',
-  'skyscanner',
-  'kayak',
-] as const;
-
 describe('no client identity reaches the public site', () => {
   const haystack = JSON.stringify(publishedCaseStudies).toLowerCase();
 
-  it.each(MUST_NOT_APPEAR)('does not mention "%s"', (needle) => {
-    expect(haystack).not.toContain(needle);
+  function digest(value: string): string {
+    return createHash('sha256').update(value).digest('hex').slice(0, 32);
+  }
+
+  const buckets = Object.entries(forbidden.byLength) as ReadonlyArray<[string, string[]]>;
+
+  it.each(buckets)('contains no forbidden identifier of length %s', (length, digests) => {
+    const n = Number(length);
+    const banned = new Set(digests);
+    const hits: string[] = [];
+    for (let i = 0; i + n <= haystack.length; i += 1) {
+      if (banned.has(digest(haystack.slice(i, i + n)))) {
+        hits.push(haystack.slice(Math.max(0, i - 20), i + n + 20));
+      }
+    }
+    expect(hits, `forbidden identifier found near: ${hits[0] ?? ''}`).toEqual([]);
+  });
+
+  it('detects a planted identifier — proves the guard actually works', () => {
+    // A guard nobody has seen fail is a guard nobody knows works.
+    const n = 7;
+    const banned = new Set(forbidden.byLength[String(n)] ?? []);
+    expect(banned.size).toBeGreaterThan(0);
+    const planted = 'x'.repeat(3) + 'dotbite' + 'y'.repeat(3);
+    let found = false;
+    for (let i = 0; i + n <= planted.length; i += 1) {
+      if (banned.has(digest(planted.slice(i, i + n)))) found = true;
+    }
+    expect(found).toBe(true);
   });
 
   it('describes every client by sector and region only', () => {
     for (const study of publishedCaseStudies) {
-      // A client description that is a bare proper noun is a name.
       expect(study.client.toLowerCase()).toMatch(/^(a|an|the)\s/);
       expect(study.industry.trim().length).toBeGreaterThan(0);
       expect(study.region.trim().length).toBeGreaterThan(0);

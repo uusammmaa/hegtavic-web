@@ -1,0 +1,36 @@
+{
+  "note": "Truncated SHA-256 of identifiers that must never appear in published content. Hashed because this repository is public and the plaintext list would itself be the disclosure it exists to prevent.",
+  "byLength": {
+    "4": [
+      "7099f399b8aab27f6f21be8c44f2b61a"
+    ],
+    "5": [
+      "2b2ff63949b46caaa980c971484ba099",
+      "9e2bce7d425e3aa413874a25e8249c71"
+    ],
+    "6": [
+      "5e40283eb6df2877adf20975ed24482b",
+      "9e4df7cb141f16a999471c3289c358ce",
+      "c1e84f7c3e4f76b97c1a6b5c8c72a0cb"
+    ],
+    "7": [
+      "bc1e8a7a61633cff59cb93fd1ac3d776",
+      "dd9272bcc3b3b48233915c32b24a3cac"
+    ],
+    "10": [
+      "dfc08cef155ec0da9e4d2fc9543b12e2"
+    ],
+    "11": [
+      "42ae243a8747840df3334a001a48f685"
+    ],
+    "12": [
+      "dbc9f197ed0044e49a397a1314f13982"
+    ],
+    "13": [
+      "ec9d78c5aaad80fcdb9069be6df2d57c"
+    ],
+    "18": [
+      "5b59738510375c23cef16d0611729742"
+    ]
+  }
+}
