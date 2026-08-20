@@ -155,7 +155,7 @@ export const philosophy = {
 
 export const vision = {
   title: 'Our Vision',
-  body: 'To become a trusted global technology partner helping businesses build intelligent products, modern software and AI-powered systems.',
+  body: 'To become a trusted global technology partner helping businesses build intelligent products, modern software and AI-powered systems that create lasting value.',
 } as const;
 
 export const mission = {

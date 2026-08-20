@@ -163,7 +163,7 @@ export default function AboutPage() {
       <Section aria-labelledby="philosophy-about-heading">
         <Container width="narrow">
           <div className="text-center">
-            <Eyebrow accent>What Hegtavic stands for</Eyebrow>
+            <Eyebrow accent>Our Philosophy</Eyebrow>
             <h2
               id="philosophy-about-heading"
               className="mt-6 text-display text-[var(--ground-ink)]"
